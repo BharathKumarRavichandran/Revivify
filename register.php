@@ -16,7 +16,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $allow=1;
 
     $url ='https://www.google.com/recaptcha/api/siteverify';
-    include_once("config.php");//To include $privateKey1 variable which contains the secret key to Google reCaptacha's API
+    include_once("config.php");//To include $privateKey variable which contains the secret key to Google reCaptacha's API
 
     $response = file_get_contents($url."?secret=".$privateKey."&response=".$_POST['g-recaptcha-response']."&remoteip=".$_SERVER['REMOTE_ADDR']);
     $data = json_decode($response);
