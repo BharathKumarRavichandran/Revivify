@@ -1,0 +1,216 @@
+<?php
+
+session_start();
+include_once("connect.php");
+include_once("createDataTable.php");
+
+if(!isset($_SESSION["username"])){
+	header('Location: login.php');
+	exit();
+}
+
+$_SESSION['message']="";
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Home | Revivify</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		
+		html,body{
+			margin: 0;
+			padding: 0;
+			font-family: Georgia, Helvetica, 'sans-serif';
+		}
+
+		a:hover{
+			cursor: pointer;
+		}
+
+		.topnav{
+			overflow: hidden;
+			background-color: #e9e9e9;
+			box-shadow: 0 1px 2px 0 rgba(0,0,0,.45);
+		}
+
+		.topnav a{
+			float: left;
+			display: block;
+			color: black;
+			text-align: center;
+			padding: 15px 36px;
+			text-decoration: none;
+			font-size: 1.5em;
+		}
+
+		.title{
+			float: none;
+			margin-left: 10vw;
+			text-align: center;
+			font-family: 'Trebuchet MS';
+			letter-spacing: 0.4em;
+			font-size: 1.5em;
+			padding: 6px;
+			margin-right: 3vw;
+		}
+
+		.title:hover{
+			cursor: pointer;
+		}
+
+		.topnav a.active{
+			background-color: #c9c9c9;
+		}
+
+		.topnav a.options:hover{
+			background-color: #645045;
+			color: white;
+		}
+
+		.topnav .search-container{
+			margin-top: 1vh;
+			float: right;
+			margin-right: 10vw;
+		}
+
+		.topnav select{
+			min-height: 35px;
+			font-size: 1.3em;
+			padding: 2px;
+		}
+
+		.topnav input[type=text]{
+			padding: 6px;
+			font-size: 1.3em;
+			min-width: 20vw;
+			border: none;
+			min-height: 20px;
+		}
+
+		.topnav .search-container button{
+			padding: 6px 10px;
+			background: #ddd;
+			font-size: 1.3em;
+			border: none;
+			cursor: pointer;
+			min-height: 20px;
+		}
+
+		.topnav .search-container button:hover{
+			background: #ccc;
+		}
+
+		li{
+			list-style-type: none;
+		}
+
+		.container{
+			width: 60%;
+			height: auto;
+		}
+
+		.card{
+			padding: 0px;
+			height: auto;
+		}
+
+		.liClass{
+			margin-top: 20px;
+			margin-bottom: 20px;
+		 	overflow: hidden; 
+		}
+
+		.imgDivClass{
+			margin-left: 40%;
+			padding: 30px;
+			padding-bottom: 10px;
+		}
+
+		.titleClass{
+			text-align: center;
+			margin-top: 2%;
+			color: #333;
+			font-family: "Garamond","Helvetica Neue","Helvetica","Arial","sans-serif";
+			font-weight: 900;
+			font-size: 1.7em;
+		}
+
+		.byAuthClass{
+			text-align: center;
+		}
+
+		.dropDivClass{
+			margin-left: 74%;
+			margin-top: 3%;
+			font-size: 20px;
+		}
+
+		.no-books{
+			padding: 10px;
+			font-size: 1.5em;
+			margin-top: 10vh;
+			text-align: center;
+			max-width: 30vw;
+			margin-left: 35vw; 
+		}
+
+		.btn-brown{
+			background: #645045;
+			color: white;
+		}
+
+		@media screen and (max-width: 600px) {
+			.topnav .search-container {
+		    	float: none;
+		  	}
+
+		  	.topnav a, .topnav input[type=text], .topnav .search-container button {
+			    float: none;
+			    display: block;
+			    text-align: left;
+			    width: 100%;
+			    margin: 0;
+			    padding: 14px;
+		  	}
+
+		  	.topnav input[type=text] {
+		    	border: 1px solid #ccc;  
+		  	}
+		}
+
+	</style>
+</head>
+<body>
+	<div class="topnav">
+		<a class="title" onclick="home()">Revivify</a>
+		<a class="active options" href="#home" onclick="home()">Home</a>
+	  	<a class="options" onclick="myBooks()">My Books</a>
+	  	<a class="options" onclick="profile()">Profile</a>
+	  	<span class="search-container">
+	      	<input id="searchValue" type="text" placeholder="Search" name="search">
+	      	<select id="selectId">
+	      		<option>Title</option>
+	      		<option>Author</option>
+	      		<option>Publisher</option>
+	      		<option>ISBN</option>
+	    		<option>Subject</option>
+	      	</select>
+	      	<button onclick="search()"><i class="fa fa-search"></i></button>	
+	  	</span>
+	</div>	
+	<div id="activityRegion">
+		
+	</div>
+<script src="functions.js"></script>
+<script src="home.js"></script>
+</body>
+</html>
