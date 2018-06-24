@@ -356,7 +356,16 @@ function shelfClick(y){
     var purpose;
     var params;
 
-    if(columnName.trim()=="Currently Reading"){
+    var children = document.getElementById("sidenav").children;
+	for(t=0;t<children.length;t++){
+		if(children[t].classList.contains("active")){
+			children[t].classList.remove("active");
+		}
+	} 
+
+	y.classList.add("active");
+
+    if(columnName.trim()=="Want To Read"||columnName.trim()=="Currently Reading"||columnName.trim()=="Finished Reading"){
     	purpose = "aShelfClick";
     	params = "status="+columnName+"&purpose="+purpose;
     }
