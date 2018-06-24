@@ -13,10 +13,6 @@ function home(){
 	window.location = "home.php";
 }
 
-function myBooks(){
-	window.location = "myBooks.php";
-}
-
 function profile(){
 	window.location = "profile.php";
 }
