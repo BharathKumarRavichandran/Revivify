@@ -314,6 +314,7 @@ function aClick(y){
 	var title = document.getElementById("title"+k).innerHTML;
 	var author = document.getElementById("author"+k).innerHTML;
 	var imgLink = document.getElementById("img"+k).getAttribute("src");
+	imgLink = encodeURIComponent(imgLink);
 	var volumeId = document.getElementById("volumeId"+k).innerHTML;
 	var purpose = "aClickAdd";
 
@@ -343,6 +344,7 @@ function adClick(y){
     var title = document.getElementById("title"+k).innerHTML;
 	var author = document.getElementById("author"+k).innerHTML;
 	var imgLink = document.getElementById("img"+k).getAttribute("src");
+	imgLink = encodeURIComponent(imgLink);
 	var volumeId = document.getElementById("volumeId"+k).innerHTML;
 	var purpose = "adClickAdd";
 
