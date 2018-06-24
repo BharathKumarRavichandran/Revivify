@@ -11,6 +11,7 @@ $sql = "CREATE TABLE IF NOT EXISTS user(
 		username VARCHAR(100) NOT NULL,
 		email VARCHAR(320) NOT NULL,
 		password VARCHAR(128) NOT NULL,
+		Shelves VARCHAR(100) NOT NULL,
 		PRIMARY KEY (id,username)
 		)";
 $conn->query($sql);
