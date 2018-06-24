@@ -32,6 +32,17 @@ $_SESSION['message']="";
 			font-family: Georgia, Helvetica, 'sans-serif';
 		}
 
+		.sticky {
+			z-index: 1;
+			position: fixed;
+			top: 0;
+			width: 100%
+		}
+
+		.sticky + .content {
+ 			padding-top: 60px;
+		}
+
 		a:hover{
 			cursor: pointer;
 		}
@@ -126,7 +137,7 @@ $_SESSION['message']="";
 		.liClass{
 			margin-top: 20px;
 			margin-bottom: 20px;
-		 	overflow: hidden; 
+		 	overflow: auto; 
 		}
 
 		.imgDivClass{
@@ -154,6 +165,16 @@ $_SESSION['message']="";
 			font-size: 20px;
 		}
 
+		.dropdown-menu{
+			overflow: scroll;
+		}
+
+		.scrollable-menu{
+		    height: auto;
+		    max-height: 200px;
+		    overflow-x: hidden;
+		}
+
 		.no-books{
 			padding: 10px;
 			font-size: 1.5em;
@@ -166,6 +187,10 @@ $_SESSION['message']="";
 		.btn-brown{
 			background: #645045;
 			color: white;
+		}
+
+		#selectId{
+			box-shadow: none;
 		}
 
 		@media screen and (max-width: 600px) {
@@ -190,10 +215,9 @@ $_SESSION['message']="";
 	</style>
 </head>
 <body>
-	<div class="topnav">
+	<div id="navbar" class="topnav">
 		<a class="title" onclick="home()">Revivify</a>
 		<a class="active options" href="#home" onclick="home()">Home</a>
-	  	<a class="options" onclick="myBooks()">My Books</a>
 	  	<a class="options" onclick="profile()">Profile</a>
 	  	<span class="search-container">
 	      	<input id="searchValue" type="text" placeholder="Search" name="search">
@@ -210,6 +234,24 @@ $_SESSION['message']="";
 	<div id="activityRegion">
 		
 	</div>
+<script type="text/javascript">
+
+	window.onscroll = function() {myFunction()};
+
+	var navbar = document.getElementById("navbar");
+
+	var sticky = navbar.offsetTop;
+
+	function myFunction() {
+		if (window.pageYOffset >= sticky) {
+		    navbar.classList.add("sticky")
+		} 
+		else{
+		    navbar.classList.remove("sticky");
+		 }
+	}
+
+</script>	
 <script src="functions.js"></script>
 <script src="home.js"></script>
 </body>
