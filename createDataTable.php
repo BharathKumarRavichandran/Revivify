@@ -24,7 +24,7 @@ $sql = "CREATE TABLE IF NOT EXISTS $tableName(
 		Author VARCHAR(500) NOT NULL, 
 		ImgLink VARCHAR(500),
 		Status VARCHAR(500),
-		Favorites VARCHAR(500),
+		Favourites VARCHAR(500),
 		PRIMARY KEY (id,VolumeId)
 		)";
 $result = $conn->query($sql);
