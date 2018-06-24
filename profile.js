@@ -27,6 +27,7 @@ else{
 function initialise(){
 
 	document.getElementById("currentlyReading").click(this);
+	shelvesInit();
 
 }
 
