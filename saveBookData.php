@@ -92,7 +92,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$sql = "ALTER TABLE $tablename ADD $shelfName VARCHAR(500);";
 		$conn->query($sql);
 
-		$shelfName.=" ";
+		$shelfName.="%";
 
 		$sql = "UPDATE user SET Shelves=concat(Shelves,'$shelfName') WHERE username = '$username';";
 		$conn->query($sql);

@@ -44,7 +44,7 @@ function shelvesInit(){
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	data = this.responseText;
-	    	shelvesArrayInit = data.split(" ");
+	    	shelvesArrayInit = data.split("%");
 	    	shelvesArrayInit.splice(shelvesArrayInit.length-1, 1);
 			for(var v=1;v<shelvesArrayInit.length;v++){//Starting at v=1 as shelf 'Favourites is already appended'
 				var shelfName = shelvesArrayInit[v];

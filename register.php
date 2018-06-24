@@ -77,7 +77,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
             include("createDataTable.php");
 
-            $shelves = "Favourites ";
+            $shelves = "Favourites%";
 
             //insert user data into database
             $sql = "INSERT INTO $tablename (username,email,password,Shelves) "."VALUES ('$username','$email','$password','$shelves')";
