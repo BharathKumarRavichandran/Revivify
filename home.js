@@ -4,10 +4,13 @@ var title;
 var imgLink;
 var author;
 var volumeId;
+var cards=0;
+var shelves = 0;
 var searchvalue = document.getElementById("searchValue");
 var select = document.getElementById("selectId");
 var activityRegion = document.getElementById("activityRegion");
 
+var shelvesArrayInit = new Array();
 var la = new Array();
 var lad = new Array();
 
@@ -22,7 +25,6 @@ else{
 
 function initialise(){
 
-	var k=0;
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
 	  		xmlhttp = new XMLHttpRequest();
@@ -33,7 +35,8 @@ function initialise(){
 	var url = "https://www.googleapis.com/books/v1/volumes?q=harry+potter";
 	var data;
 	xmlhttp.onreadystatechange = function(){
-	    if(this.readyState==4&&this.status==200){
+	    if(this.readyState==4&&this.status==200){ 
+	    	cards=0;	
 	    	data = JSON.parse(this.responseText);
 	    	if(data.totalItems==0){
 	    		noBooksDisplay();
@@ -44,10 +47,39 @@ function initialise(){
 		    		author = data.items[i].volumeInfo.authors;
 		    		imgLink = data.items[i].volumeInfo.imageLinks.thumbnail;
 		    		volumeId = data.items[i].id;
-		    		createBox(k,volumeId,title,author,imgLink);
-		    		k++;
+		    		createBox(cards,volumeId,title,author,imgLink);
+		    		cards++;
 		    	}
-		    }		
+		    }
+		    shelvesInit();		
+	    }
+	};
+	xmlhttp.open("GET",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send();
+
+}
+
+function shelvesInit(){
+
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var url = "getShelvesName.php";
+	var data;
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	data = this.responseText;
+	    	shelvesArrayInit = data.split(" ");
+	    	shelvesArrayInit.splice(shelvesArrayInit.length-1, 1);
+			for(var v=1;v<shelvesArrayInit.length;v++){//Starting at v=1 as shelf 'Favourites is already appended'
+				var shelfName = shelvesArrayInit[v];
+				shelfDropDownAppend(shelfName);
+			}	
 	    }
 	};
 	xmlhttp.open("GET",url,true);
@@ -89,7 +121,6 @@ function search(){
 	}
 
 	url+=searchString;
-	var k=0;
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
 	  		xmlhttp = new XMLHttpRequest();
@@ -100,6 +131,7 @@ function search(){
 	var data;
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
+	    	cards=0;
 	    	data = JSON.parse(this.responseText);
 	    	if(data.totalItems==0){
 	    		noBooksDisplay();
@@ -110,9 +142,15 @@ function search(){
 		    		author = data.items[i].volumeInfo.authors;
 		    		imgLink = data.items[i].volumeInfo.infoLink;
 		    		volumeId = data.items[i].id;
-		    		createBox(k,volumeId,title,author,imgLink);
-		    		k++;
-	    		}	
+		    		createBox(cards,volumeId,title,author,imgLink);
+		    		cards++;
+	    		}
+
+	    		for(var t=1;t<shelvesArrayInit.length;t++){//For appending shelves name inside dropdown-menu
+	    			var shelfName = shelvesArrayInit[t];
+	    			shelfDropDownAppend(shelfName);	
+	    		}
+
 	    	}
 	    }
 	    searchValue.value = "";
@@ -153,19 +191,17 @@ function createBox(k,volumeId,title,author,imgLink){
 	var a2 = document.createElement("a");
 	var dropDownDivider = document.createElement("div");
 	var dropDivideHead = document.createElement("h5");
-	var ad = document.createElement("a");
 	var ad0 = document.createElement("a");
 	var idDiv = document.createElement("div");
 
 	var titleText = document.createTextNode(title);
 	var bySpanText = document.createTextNode("by ");
 	var authorText = document.createTextNode(author);
-	var dropbtnText = document.createTextNode("DropDown button");
+	var dropbtnText = document.createTextNode("Want To Read");
 	var a0Text = document.createTextNode("Want To Read");
 	var a1Text = document.createTextNode("Currently Reading");
 	var a2Text = document.createTextNode("Finished Reading");
 	var dropDivideHeadText = document.createTextNode("Shelves");
-	var adText = document.createTextNode("Add New Shelf");
 	var ad0Text = document.createTextNode("Favourites");
 	var idDivText = document.createTextNode(volumeId);
 
@@ -177,7 +213,6 @@ function createBox(k,volumeId,title,author,imgLink){
 	a1.appendChild(a1Text);
 	a2.appendChild(a2Text);
 	dropDivideHead.appendChild(dropDivideHeadText);
-	ad.appendChild(adText);
 	ad0.appendChild(ad0Text);
 	idDiv.appendChild(idDivText);
 
@@ -188,7 +223,6 @@ function createBox(k,volumeId,title,author,imgLink){
 	dropmenuDiv.appendChild(a2);
 	dropmenuDiv.appendChild(dropDownDivider);
 	dropmenuDiv.appendChild(dropDivideHead);
-	dropmenuDiv.appendChild(ad);
 	dropmenuDiv.appendChild(ad0);
 	dropDiv.appendChild(dropmenuDiv);
 	li.appendChild(dropDiv);
@@ -205,10 +239,10 @@ function createBox(k,volumeId,title,author,imgLink){
 	titleDiv.setAttribute("id","title"+k);
 	authorSpan.setAttribute("id","author"+k);
 	dropBtn.setAttribute("id","dropBtn"+k);
+	dropmenuDiv.setAttribute("id","dropmenuDiv"+k);
 	a0.setAttribute("id","0a"+k);
 	a1.setAttribute("id","1a"+k);
 	a2.setAttribute("id","2a"+k);
-	ad.setAttribute("id","ad"+k);
 	ad0.setAttribute("id","0ad"+k);
 	idDiv.setAttribute("id","volumeId"+k);
 
@@ -222,12 +256,11 @@ function createBox(k,volumeId,title,author,imgLink){
 	byAuthDiv.setAttribute("class","byAuthClass");
 	dropDiv.setAttribute("class","dropdown dropDivClass");
 	dropBtn.setAttribute("class","btn btn-brown dropdown-toggle");
-	dropmenuDiv.setAttribute("class","dropdown-menu");
+	dropmenuDiv.setAttribute("class","dropdown-menu scrollable-menu");
 	a0.setAttribute("class","dropdown-item");
 	a1.setAttribute("class","dropdown-item");
 	a2.setAttribute("class","dropdown-item");
 	dropDivideHead.setAttribute("class","dropdown-header");
-	ad.setAttribute("class","dropdown-item");
 	ad0.setAttribute("class","dropdown-item");
 
 
@@ -242,13 +275,32 @@ function createBox(k,volumeId,title,author,imgLink){
 	a0.setAttribute("onclick","aClick(this)");
 	a1.setAttribute("onclick","aClick(this)");
 	a2.setAttribute("onclick","aClick(this)");
-	ad.setAttribute("onclick","addNewShelf(this)");
 	ad0.setAttribute("onclick","adClick(this)");
 	idDiv.setAttribute("style","display:none");
 
 
 }
 
+function shelfDropDownAppend(shelfName){
+
+	var ad;
+	var adText;
+
+	for(var u=0;u<cards;u++){
+
+		shelves++;
+
+		ad = document.createElement("a");
+		adText = document.createTextNode(shelfName);
+		ad.appendChild(adText);
+		document.getElementById("dropmenuDiv"+u).appendChild(ad);
+
+		ad.setAttribute("id",shelves+"ad"+u);
+		ad.setAttribute("class","dropdown-item");
+		ad.setAttribute("onclick","adClick(this)");
+
+	}
+}
 
 function aClick(y){
 
@@ -257,6 +309,7 @@ function aClick(y){
     var k = parseInt(res[1]);
 	var l = parseInt(res[0]);
 	var bookStatus = y.innerHTML;
+	document.getElementById("dropBtn"+k).innerHTML = bookStatus;
 
 	var title = document.getElementById("title"+k).innerHTML;
 	var author = document.getElementById("author"+k).innerHTML;
@@ -279,56 +332,13 @@ function aClick(y){
 
 }
 
-function addNewShelf(y){
-
-	var idAttr = y.getAttribute("id");
-    var res = idAttr.split("ad");
-    var k = parseInt(res[1]);
-
-    var title = document.getElementById("title"+k).innerHTML;
-	var author = document.getElementById("author"+k).innerHTML;
-	var imgLink = document.getElementById("img"+k).getAttribute("src");
-
-	/*var xmlhttp;
-	if (window.XMLHttpRequest) {
-	  		xmlhttp = new XMLHttpRequest();
-	} 
-	 else{
-	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = "https://www.googleapis.com/books/v1/volumes?q=harry+potter";
-	var data;
-	xmlhttp.onreadystatechange = function(){
-	    if(this.readyState==4&&this.status==200){
-	    	data = JSON.parse(this.responseText);
-	    	if(data.totalItems==0){
-	    		noBooksDisplay();
-	    	}	
-	    	else{	
-		    	for(i=0;i<data.items.length;i++){
-		    		title = data.items[i].volumeInfo.title;
-		    		author = data.items[i].volumeInfo.authors;
-		    		imgLink = data.items[i].volumeInfo.imageLinks.thumbnail;
-		    		createBox(k,title,author,imgLink);
-		    		k++;
-		    	}
-		    }		
-	    }
-	};
-	xmlhttp.open("GET",url,true);
-	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send();*/
-
-
-}
-
 function adClick(y){
 
 	var idAttr = y.getAttribute("id");
     var res = idAttr.split("ad");
     var k = parseInt(res[1]);
     var l = parseInt(res[0]);
-    var bookStatus = y.innerHTML;
+    var columnName = y.innerHTML;
 
     var title = document.getElementById("title"+k).innerHTML;
 	var author = document.getElementById("author"+k).innerHTML;
@@ -343,7 +353,7 @@ function adClick(y){
 	 else{
 	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var params =  "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&status="+bookStatus+"&volumeId="+volumeId+"&purpose="+purpose;
+	var params =  "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&columnName="+columnName+"&volumeId="+volumeId+"&purpose="+purpose;
 	var url = "saveBookData.php";
 	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
