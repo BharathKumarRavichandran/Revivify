@@ -1,6 +1,6 @@
 <?php
 
-//File that updates user's appointment data in database from appointment.js
+//File that saves book data in database
 if(!isset($_SESSION)){ 
     session_start(); 
 } 
@@ -54,8 +54,48 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 	}
 
-	if($_POST["purpose"]=="adClickAdd"){
+	else if($_POST["purpose"]=="adClickAdd"){
 
+		$volumeId = $_POST['volumeId'];
+		$title = $_POST['title'];
+		$author = $_POST['author'];
+		$imgLink = $_POST['imgLink'];
+		$column = $_POST['columnName'];
+
+		$sql = "SELECT * FROM $tablename WHERE VolumeId = '$volumeId';";
+		$result = $conn->query($sql);	
+
+		if($result->num_rows>0){
+			while($row = $result->fetch_assoc()){
+
+				if($row[$column]=="yes"){
+					$status = "no";
+				}
+
+				else{
+					$status = "yes";
+				}
+
+				$sql = "UPDATE $tablename SET $column ='$status' WHERE VolumeId = '$volumeId';";
+				$conn->query($sql);					
+
+			}
+		}		
+
+	}
+
+
+	else if($_POST["purpose"]=="addShelf"){
+
+		$shelfName = $_POST["shelfName"];
+
+		$sql = "ALTER TABLE $tablename ADD $shelfName VARCHAR(500);";
+		$conn->query($sql);
+
+		$shelfName.=" ";
+
+		$sql = "UPDATE user SET Shelves=concat(Shelves,'$shelfName') WHERE username = '$username';";
+		$conn->query($sql);
 
 	}
 		
