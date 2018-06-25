@@ -4,6 +4,7 @@ var title;
 var imgLink;
 var author;
 var volumeId;
+var liked;
 var cards=0;
 var shelves = 0;
 var searchvalue = document.getElementById("searchValue");
@@ -47,7 +48,8 @@ function initialise(){
 		    		author = data.items[i].volumeInfo.authors;
 		    		imgLink = data.items[i].volumeInfo.imageLinks.thumbnail;
 		    		volumeId = data.items[i].id;
-		    		createBox(cards,volumeId,title,author,imgLink);
+		    		liked="no";
+		    		createBox(cards,volumeId,title,author,imgLink,liked);
 		    		cards++;
 		    	}
 		    }
@@ -142,7 +144,8 @@ function search(){
 		    		author = data.items[i].volumeInfo.authors;
 		    		imgLink = data.items[i].volumeInfo.infoLink;
 		    		volumeId = data.items[i].id;
-		    		createBox(cards,volumeId,title,author,imgLink);
+		    		liked="no";
+		    		createBox(cards,volumeId,title,author,imgLink,liked);
 		    		cards++;
 	    		}
 
@@ -170,7 +173,7 @@ function noBooksDisplay(){
 	div.setAttribute("class","no-books card bg-light");
 }
 
-function createBox(k,volumeId,title,author,imgLink){
+function createBox(k,volumeId,title,author,imgLink,liked){
 
 	la[k]=1;
 	lad[k]=1;
@@ -192,6 +195,8 @@ function createBox(k,volumeId,title,author,imgLink){
 	var dropDownDivider = document.createElement("div");
 	var dropDivideHead = document.createElement("h5");
 	var ad0 = document.createElement("a");
+	var likeDiv = document.createElement("div");
+	var i = document.createElement("i");
 	var idDiv = document.createElement("div");
 
 	var titleText = document.createTextNode(title);
@@ -232,6 +237,8 @@ function createBox(k,volumeId,title,author,imgLink){
 	byAuthDiv.appendChild(authorSpan);
 	div2.appendChild(byAuthDiv);
 	li.appendChild(div2);
+	likeDiv.appendChild(i);
+	li.appendChild(likeDiv);
 	li.appendChild(idDiv);
 	activityRegion.appendChild(li);
 
@@ -244,6 +251,7 @@ function createBox(k,volumeId,title,author,imgLink){
 	a1.setAttribute("id","1a"+k);
 	a2.setAttribute("id","2a"+k);
 	ad0.setAttribute("id","0ad"+k);
+	i.setAttribute("id","like"+k);
 	idDiv.setAttribute("id","volumeId"+k);
 
 	la[k]=2;
@@ -263,6 +271,12 @@ function createBox(k,volumeId,title,author,imgLink){
 	dropDivideHead.setAttribute("class","dropdown-header");
 	ad0.setAttribute("class","dropdown-item");
 
+	if(liked=="yes"){
+		i.setAttribute("class","fa fa-thumbs-up fa-2x liked");
+	}
+	else{
+		i.setAttribute("class","fa fa-thumbs-up fa-2x");
+	}
 
 	if(author==null){
 		byAuthDiv.setAttribute("style","display:none");
@@ -276,6 +290,7 @@ function createBox(k,volumeId,title,author,imgLink){
 	a1.setAttribute("onclick","aClick(this)");
 	a2.setAttribute("onclick","aClick(this)");
 	ad0.setAttribute("onclick","adClick(this)");
+	i.setAttribute("onclick","likeButtonClick(this)");
 	idDiv.setAttribute("style","display:none");
 
 
@@ -325,7 +340,7 @@ function aClick(y){
 	 else{
 	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var params = "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&status="+bookStatus+"&volumeId="+volumeId+"&purpose="+purpose;
+	var params = "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&status="+bookStatus+"&purpose="+purpose;
 	var url = "saveBookData.php";
 	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
@@ -355,12 +370,51 @@ function adClick(y){
 	 else{
 	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var params =  "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&columnName="+columnName+"&volumeId="+volumeId+"&purpose="+purpose;
+	var params =  "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&columnName="+columnName+"&purpose="+purpose;
 	var url = "saveBookData.php";
 	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
 
+}
+
+function likeButtonClick(y){
+
+	var idAttr = y.getAttribute("id");
+    var res = idAttr.split("like");
+    var k = parseInt(res[1]);
+
+    var volumeId = document.getElementById("volumeId"+k).innerHTML;
+    var title = document.getElementById("title"+k).innerHTML;
+	var author = document.getElementById("author"+k).innerHTML;
+	var imgLink = document.getElementById("img"+k).getAttribute("src");
+	imgLink = encodeURIComponent(imgLink);
+    var columnName = "Liked";
+    var purpose = "likeUpdate";
+  	var likeStatus;
+
+  	if(y.classList.contains("liked")){
+		y.classList.remove("liked");
+		likeStatus = "no";
+	}
+	else{
+		y.classList.add("liked");
+		likeStatus = "yes";
+	}
+
+    var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var params =  "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&columnName="+columnName+"&likeStatus="+likeStatus+"&purpose="+purpose;
+	var url = "saveBookData.php";
+	xmlhttp.open("POST",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+ 
 }
 
 initialise();

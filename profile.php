@@ -17,7 +17,7 @@ $_SESSION['message']="";
 <html>
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<title>Home | Revivify</title>
+	<title>Profile | Revivify</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -332,6 +332,19 @@ $_SESSION['message']="";
 			font-size: 1.2em;
 		}
 
+		.fa-thumbs-up{
+			margin-top: 2%;
+			margin-left: 10%;
+			margin-bottom: 2%;
+			cursor: pointer;
+    		user-select: none;
+    		color: #a2b9bc;
+		}
+
+		.liked{
+			color : #645045;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;
@@ -372,6 +385,7 @@ $_SESSION['message']="";
 	</div>	
 	<div class="sidenav" id="sidenav">
 		<a class="sidenavlinks" onclick="">Activity</a>
+		<a id="booksLiked" class="sidenavlinks" onclick="shelfClick(this);">Books Liked</a>
 		<a id="wantToRead" class="sidenavlinks" onclick="shelfClick(this);">Want To Read</a>
 		<a id="currentlyReading" class="sidenavlinks active" onclick="shelfClick(this);">Currently Reading</a>
 		<a id="finishedReading" class="sidenavlinks" onclick="shelfClick(this);">Finished Reading</a>
@@ -392,7 +406,7 @@ $_SESSION['message']="";
 			</div>
 		</div>
 	</div>
-	<div id="activityRegion" class="main">
+	<div id="activityRegion" class="main" style="margin-top: 20vh;">
 		
 	</div>
 <script type="text/javascript">

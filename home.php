@@ -193,6 +193,19 @@ $_SESSION['message']="";
 			box-shadow: none;
 		}
 
+		.fa-thumbs-up{
+			margin-top: 2%;
+			margin-left: 10%;
+			margin-bottom: 2%;
+			cursor: pointer;
+    		user-select: none;
+    		color: #a2b9bc;
+		}
+
+		.liked{
+			color : #645045;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;
@@ -231,7 +244,7 @@ $_SESSION['message']="";
 	      	<button onclick="search()"><i class="fa fa-search"></i></button>	
 	  	</span>
 	</div>	
-	<div id="activityRegion">
+	<div id="activityRegion" style="margin-top: 20vh;">
 		
 	</div>
 <script type="text/javascript">

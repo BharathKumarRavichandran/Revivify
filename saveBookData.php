@@ -28,6 +28,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$author = $_POST['author'];
 		$imgLink = $_POST['imgLink'];
 		$status = $_POST['status'];
+		$likeStatus = "no";
 
 		$sql = "SELECT * FROM $tablename WHERE VolumeId = '$volumeId';";
 		$result = $conn->query($sql);	
@@ -43,7 +44,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		else{
 
-			$sql = "INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Status) "."VALUES ('$volumeId','$title','$author','$imgLink','$status');";
+			$sql = "INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES ('$volumeId','$title','$author','$imgLink','$likeStatus','$status');";
 			$result = $conn->query($sql);
 
 			if (!$result){
@@ -80,6 +81,19 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 				$conn->query($sql);					
 
 			}
+		}
+
+		else{
+
+				$likeStatus = "no";
+
+				$sql = "INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES ('$volumeId','$title','$author','$imgLink','$likeStatus','$status');";
+				$result = $conn->query($sql);
+
+				if (!$result){
+					trigger_error('Invalid query: ' . $conn->error);
+				}
+
 		}		
 
 	}
@@ -96,6 +110,48 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		$sql = "UPDATE user SET Shelves=concat(Shelves,'$shelfName') WHERE username = '$username';";
 		$conn->query($sql);
+
+	}
+
+	else if($_POST["purpose"]=="likeUpdate"){
+
+		$volumeId = $_POST['volumeId'];
+		$title = $_POST['title'];
+		$author = $_POST['author'];
+		$imgLink = $_POST['imgLink'];
+		$likeStatus = $_POST['likeStatus'];
+		$column = $_POST['columnName'];
+
+		$sql = "SELECT * FROM $tablename WHERE VolumeId = '$volumeId';";
+		$result = $conn->query($sql);	
+
+		if($result->num_rows>0){
+			while($row = $result->fetch_assoc()){
+
+				if($row[$column]=="yes"){
+					$likeStatus = "no";
+				}
+
+				else{
+					$likeStatus = "yes";
+				}
+
+				$sql = "UPDATE $tablename SET $column ='$likeStatus' WHERE VolumeId = '$volumeId';";
+				$conn->query($sql);					
+
+			}
+		}
+
+		else{
+
+			$sql = "INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked) "."VALUES ('$volumeId','$title','$author','$imgLink','$likeStatus');";
+			$result = $conn->query($sql);
+
+			if (!$result){
+				trigger_error('Invalid query: ' . $conn->error);
+			}
+
+		}		
 
 	}
 		
