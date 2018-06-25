@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		if($result->num_rows>0){
 			while($row = $result->fetch_assoc()){
 
-				$r = array('VolumeId'=>$row["VolumeId"],'Title'=>$row["Title"],'Author'=>$row["Author"],'ImgLink'=>$row["ImgLink"]);
+				$r = array('VolumeId'=>$row["VolumeId"],'Title'=>$row["Title"],'Author'=>$row["Author"],'ImgLink'=>$row["ImgLink"],'Liked'=>$row["Liked"]);
 				array_push($bookData,$r);	
 			}
 		}	
@@ -53,7 +53,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		if($result->num_rows>0){
 			while($row = $result->fetch_assoc()){
 
-				$r = array('VolumeId'=>$row["VolumeId"],'Title'=>$row["Title"],'Author'=>$row["Author"],'ImgLink'=>$row["ImgLink"]);
+				$r = array('VolumeId'=>$row["VolumeId"],'Title'=>$row["Title"],'Author'=>$row["Author"],'ImgLink'=>$row["ImgLink"],'Liked'=>$row["Liked"]);
 				array_push($bookData,$r);	
 			}
 		}	
