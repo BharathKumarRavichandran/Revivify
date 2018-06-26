@@ -345,6 +345,14 @@ $_SESSION['message']="";
 			color : #645045;
 		}
 
+		.activityText{
+			margin-left: 6%;
+			margin-bottom: -1%;
+			font-style: italic; 
+			font-weight: 700;
+			font-size: 1.3em;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;
@@ -384,10 +392,10 @@ $_SESSION['message']="";
 	  	</span>
 	</div>	
 	<div class="sidenav" id="sidenav">
-		<a class="sidenavlinks" onclick="">Activity</a>
+		<a class="sidenavlinks active" onclick="activityClick();">Activity</a>
 		<a id="booksLiked" class="sidenavlinks" onclick="shelfClick(this);">Books Liked</a>
 		<a id="wantToRead" class="sidenavlinks" onclick="shelfClick(this);">Want To Read</a>
-		<a id="currentlyReading" class="sidenavlinks active" onclick="shelfClick(this);">Currently Reading</a>
+		<a id="currentlyReading" class="sidenavlinks" onclick="shelfClick(this);">Currently Reading</a>
 		<a id="finishedReading" class="sidenavlinks" onclick="shelfClick(this);">Finished Reading</a>
 		<a class="sidenavlinks" onclick="logout();">Logout</a>
 		<div class="sidenavlinks labelsOPT">Bookshelves:</div>
