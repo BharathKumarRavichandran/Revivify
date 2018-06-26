@@ -176,7 +176,7 @@ $_SESSION['message']="";
 		}
 
 		.container{
-			width: 60%;
+			width: 65%;
 			height: auto;
 		}
 
