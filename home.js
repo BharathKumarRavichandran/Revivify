@@ -342,6 +342,11 @@ function aClick(y){
 	}
 	var params = "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&status="+bookStatus+"&purpose="+purpose;
 	var url = "saveBookData.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText);
+	    }
+	};
 	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -372,6 +377,11 @@ function adClick(y){
 	}
 	var params =  "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&columnName="+columnName+"&purpose="+purpose;
 	var url = "saveBookData.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText);
+	    }
+	};
 	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -411,6 +421,11 @@ function likeButtonClick(y){
 	}
 	var params =  "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&columnName="+columnName+"&likeStatus="+likeStatus+"&purpose="+purpose;
 	var url = "saveBookData.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText);
+	    }
+	};
 	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
