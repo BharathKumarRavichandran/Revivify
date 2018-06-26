@@ -61,7 +61,7 @@ Paste this public key in the 'data-sitekey' attribute,replacing "Your-public-key
 * Copy the folder Revivify to your localhost directory.
 * Start your XAMPP/WAMP or any apache distribution software.
 * Start your apache server and mySQL modules.
-* Open up your browser. Type http://localhost/scheduler/ as the URL.
+* Open up your browser. Type http://localhost/Revivify/ as the URL.
 * Click on *welcome.html*
 
 ----
