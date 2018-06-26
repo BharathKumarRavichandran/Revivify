@@ -7,6 +7,8 @@ var volumeId;
 var liked;
 var cards=0;
 var shelves = 0;
+var searchData;
+var allBookData;
 var searchvalue = document.getElementById("searchValue");
 var select = document.getElementById("selectId");
 var activityRegion = document.getElementById("activityRegion");
@@ -72,6 +74,7 @@ function search(){
 	var url = "https://www.googleapis.com/books/v1/volumes?q=";
 	var optValue = select.options[select.selectedIndex].text;
 	var searchString;
+	searchValue = searchvalue.value;
 
 	if(optValue=="Title"){
 		searchString = "intitle:"+searchValue;
@@ -106,27 +109,15 @@ function search(){
 	    if(this.readyState==4&&this.status==200){
 	    	cards=0;
 	    	data = JSON.parse(this.responseText);
+	    	searchData = JSON.parse(this.responseText);
 	    	if(data.totalItems==0){
 	    		noBooksDisplay();
-	    	}	
+	    	}
 	    	else{
-	    		for(i=0;i<data.items.length;i++){
-		    		title = data.items[i].volumeInfo.title;
-		    		author = data.items[i].volumeInfo.authors;
-		    		imgLink = data.items[i].volumeInfo.infoLink;
-		    		volumeId = data.items[i].id;
-		    		liked = "no";
-		    		createBox(cards,volumeId,title,author,imgLink,liked);
-		    		cards++;
-	    		}
-
-	    		for(var t=1;t<shelvesArrayInit.length;t++){//For appending shelves name inside dropdown-menu
-	    			var shelfName = shelvesArrayInit[t];
-	    			shelfDropDownAppend(shelfName);	
-	    		}
-
+	    		getAllBooksData();
 	    	}
 	    }
+
 	    searchValue.value = "";
 	    searchValue.placeholder = "Search";
 	};
@@ -523,6 +514,62 @@ function likeButtonClick(y){
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
  
+}
+
+function appendSearchBooks(){
+
+	var appended=false;
+	cards=0;
+
+	for(var c=0;c<searchData.items.length;c++){
+		appended=false;
+		for(var d=0;d<allBookData.length;d++){
+			if(searchData.items[c].id==allBookData[d].VolumeId){
+				title = allBookData[d].Title;
+		    	author = allBookData[d].Authors;
+		    	imgLink = allBookData[d].ImgLink;
+		    	imgLink = decodeURIComponent(imgLink);
+		    	volumeId = allBookData[d].VolumeId;
+		    	liked = allBookData[d].Liked;
+		    	createBox(cards,volumeId,title,author,imgLink,liked);
+		    	appended=true;
+			}
+		}
+		if(appended==false){
+			title = searchData.items[c].volumeInfo.title;
+		    author = searchData.items[c].volumeInfo.authors;
+		    imgLink = searchData.items[c].volumeInfo.imageLinks.thumbnail;
+		    volumeId = searchData.items[c].id;
+		    liked="no";
+		    createBox(cards,volumeId,title,author,imgLink,liked);
+		}
+		cards++;
+	}
+}
+
+
+function getAllBooksData(){
+
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var data;
+	var params="";
+	var url = "getAllBooksData.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	     allBookData = JSON.parse(this.responseText);
+	     appendSearchBooks();
+	    }
+	};
+	xmlhttp.open("POST",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
 }
 
 initialise();
