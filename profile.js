@@ -5,6 +5,7 @@ var imgLink;
 var author;
 var volumeId;
 var liked;
+var activity;
 var cards=0;
 var shelves = 0;
 var searchData;
@@ -29,7 +30,7 @@ else{
 
 function initialise(){
 
-	document.getElementById("currentlyReading").click(this);
+	activityClick();
 	shelvesInit();
 
 }
@@ -570,6 +571,70 @@ function getAllBooksData(){
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
 
+}
+
+function activityClick(){
+
+	while(activityRegion.firstChild){
+		activityRegion.removeChild(activityRegion.firstChild);
+	}
+	
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var data;
+	var params="";
+	var url = "getAllBooksData.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+			cards=0;
+		    data = JSON.parse(this.responseText);
+		    if(data.length==0){
+		    	noActivityDisplay();
+		    }	
+		    else{
+		    	for(i=data.length-1;i>=0;i--){
+			    	title = data[i].Title;
+			    	author = data[i].Authors;
+			    	imgLink = data[i].ImgLink;
+			    	imgLink = decodeURIComponent(imgLink);
+			    	volumeId = data[i].VolumeId;
+			    	liked = data[i].Liked;
+			    	activity = data[i].Activity;
+
+			    	var div = document.createElement("div");
+			    	var divText = document.createTextNode(activity);
+			    	div.appendChild(divText);
+			    	activityRegion.appendChild(div);
+			    	div.setAttribute("class","activityText");
+
+			    	createBox(cards,volumeId,title,author,imgLink,liked);
+			    	cards++;
+		    	}
+
+		    	for(var t=1;t<shelvesArrayInit.length;t++){//For appending shelves name inside dropdown-menu
+		    		var shelfName = shelvesArrayInit[t];
+		    		shelfDropDownAppend(shelfName);	
+		    	}	
+		    }     
+	    }
+	};
+	xmlhttp.open("POST",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);	
+
+}
+
+function noActivityDisplay(){
+	var div = document.createElement("div");
+	var divText = document.createTextNode("No Recent Activity!");
+	div.appendChild(divText);
+	activityRegion.appendChild(div);
+	div.setAttribute("class","no-books card bg-light");
 }
 
 initialise();
