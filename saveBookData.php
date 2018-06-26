@@ -48,12 +48,30 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 				}
 				$stmt->bind_param("ss",$status,$volumeId);
 				$stmt->execute();
+				$stmt->close();
+
+				$activity = $username." has added ".$title." to his ".$status." collection.";
+				$stmt = $conn->prepare("UPDATE $tablename SET Activity=? WHERE VolumeId = ?;");
+				if(!$stmt){
+					echo "Error preparing statement ".htmlspecialchars($conn->error);
+				}
+				$stmt->bind_param("ss",$activity,$volumeId);
+				$stmt->execute();
 				$stmt->close();					
 
 			}
 		}	
 
 		else{
+
+			$activity = $username." has added ".$title." to his ".$status." collection.";
+			$stmt = $conn->prepare("UPDATE $tablename SET Activity=? WHERE VolumeId = ?;");
+			if(!$stmt){
+				echo "Error preparing statement ".htmlspecialchars($conn->error);
+			}
+			$stmt->bind_param("ss",$activity,$volumeId);
+			$stmt->execute();
+			$stmt->close();	
 
 			$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES (?,?,?,?,?,?);");
 			if(!$stmt){
@@ -93,12 +111,16 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		if($result->num_rows>0){
 			while($row = $result->fetch_assoc()){
 
+				$activity = $username." has added ".$title." to his ".$column." collection.";
+
 				if($row[$column]=="yes"){
 					$status = "no";
+					$activity = $username." has removed ".$title." from his ".$column." collection.";
 				}
 
 				else{
 					$status = "yes";
+					$activity = $username." has added ".$title." to his ".$column." collection.";
 				}
 
 				$stmt = $conn->prepare("UPDATE $tablename SET $column = ? WHERE VolumeId = ?;");
@@ -107,6 +129,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 				}
 				$stmt->bind_param("ss",$status,$volumeId);
 				$stmt->execute();		
+				$stmt->close();	
+
+				$stmt = $conn->prepare("UPDATE $tablename SET Activity=? WHERE VolumeId = ?;");
+				if(!$stmt){
+					echo "Error preparing statement ".htmlspecialchars($conn->error);
+				}
+				$stmt->bind_param("ss",$activity,$volumeId);
+				$stmt->execute();
 				$stmt->close();			
 
 			}
@@ -123,12 +153,17 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 				}
 				$stmt->bind_param("ssssss",$volumeId,$title,$author,$imgLink,$likeStatus,$status);
 				$stmt->execute();
-				$result = $stmt->get_result();
+				$stmt->get_result();
 
-				if (!$result){
-					trigger_error('Invalid query: ' . $conn->error);
+				$stmt->close();
+
+				$activity = $username." has added ".$title." to his ".$column." collection. ";
+				$stmt = $conn->prepare("UPDATE $tablename SET Activity=? WHERE VolumeId = ?;");
+				if(!$stmt){
+					echo "Error preparing statement ".htmlspecialchars($conn->error);
 				}
-
+				$stmt->bind_param("ss",$activity,$volumeId);
+				$stmt->execute();
 				$stmt->close();
 
 		}		
@@ -186,6 +221,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 				else{
 					$likeStatus = "yes";
+					$activity = $username." liked ".$title.".";
+					$stmt = $conn->prepare("UPDATE $tablename SET Activity=? WHERE VolumeId = ?;");
+					if(!$stmt){
+						echo "Error preparing statement ".htmlspecialchars($conn->error);
+					}
+					$stmt->bind_param("ss",$activity,$volumeId);
+					$stmt->execute();
+					$stmt->close();	
 				}
 
 				$stmt = $conn->prepare("UPDATE $tablename SET $column = ? WHERE VolumeId = ?;");
@@ -194,7 +237,8 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 				}
 				$stmt->bind_param("ss",$likeStatus,$volumeId);
 				$stmt->execute();		
-				$stmt->close();			
+				$stmt->close();		
+
 			}
 		}
 
@@ -204,6 +248,15 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$stmt->bind_param("sssss",$volumeId,$title,$author,$imgLink,$likeStatus);
 			$stmt->execute();
 			$stmt->get_result();
+			$stmt->close();
+
+			$activity = $username." liked ".$title.".";
+			$stmt = $conn->prepare("UPDATE $tablename SET Activity=? WHERE VolumeId = ?;");
+			if(!$stmt){
+				echo "Error preparing statement ".htmlspecialchars($conn->error);
+			}
+			$stmt->bind_param("ss",$activity,$volumeId);
+			$stmt->execute();
 			$stmt->close();
 
 		}		
