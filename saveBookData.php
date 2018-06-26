@@ -203,12 +203,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked) "."VALUES (?,?,?,?,?);");
 			$stmt->bind_param("sssss",$volumeId,$title,$author,$imgLink,$likeStatus);
 			$stmt->execute();
-			$result = $stmt->get_result();
-
-			if (!$result){
-				trigger_error('Invalid query: ' . $conn->error);
-			}
-
+			$stmt->get_result();
 			$stmt->close();
 
 		}		
