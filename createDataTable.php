@@ -24,6 +24,7 @@ $sql = "CREATE TABLE IF NOT EXISTS $tableName(
 		Author VARCHAR(500) NOT NULL, 
 		ImgLink VARCHAR(500),
 		Activity VARCHAR(500),
+		Expires DATETIME,
 		Liked VARCHAR(500),
 		Status VARCHAR(500),
 		Favourites VARCHAR(500),
