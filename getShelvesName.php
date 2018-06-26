@@ -21,15 +21,21 @@ if($_SERVER['REQUEST_METHOD']=="GET"){
 	$sql = "USE Revivify;";
 	$conn->query($sql);
 
-	$sql = "SELECT * FROM $tablename WHERE username = '$username';";
-	$result = $conn->query($sql);
+	$stmt = $conn->prepare("SELECT * FROM $tablename WHERE username = ?;");
+	if(!$stmt){
+		echo "Error preparing statement ".htmlspecialchars($conn->error);
+	}
+	$stmt->bind_param("s",$username);
+	$stmt->execute();
+	$result = $stmt->get_result();
 
 	if($result->num_rows>0){
 		while($row = $result->fetch_assoc()){
-
 			echo $row["Shelves"];
 		}
 	}
+
+	$stmt->close();
 		
 }
 

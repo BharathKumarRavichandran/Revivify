@@ -25,8 +25,13 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		$status = $_POST['status'];
 
-		$sql = "SELECT * FROM $tablename WHERE Status = '$status';";
-		$result = $conn->query($sql);
+		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE Status = ?;");
+		if(!$stmt){
+			echo "Error preparing statement ".htmlspecialchars($conn->error);
+		}
+		$stmt->bind_param("s",$status);
+		$stmt->execute();
+		$result = $stmt->get_result();
 
 		$bookData = array();
 
@@ -38,6 +43,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			}
 		}	
 		echo json_encode($bookData);
+		$stmt->close();
 	}
 
 	else if($_POST['purpose']=="adShelfClick"){
@@ -45,8 +51,13 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$columnName = $_POST['columnName'];
 		$status = $_POST['status'];
 
-		$sql = "SELECT * FROM $tablename WHERE $columnName = '$status';";
-		$result = $conn->query($sql);
+		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE $columnName = ?;");
+		if(!$stmt){
+			echo "Error preparing statement ".htmlspecialchars($conn->error);
+		}
+		$stmt->bind_param("s",$status);
+		$stmt->execute();
+		$result = $stmt->get_result();
 
 		$bookData = array();
 
@@ -57,7 +68,8 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 				array_push($bookData,$r);	
 			}
 		}	
-		echo json_encode($bookData);
+		echo json_encode($bookData);	
+		$stmt->close();	
 	}
 		
 }

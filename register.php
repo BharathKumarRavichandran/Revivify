@@ -80,9 +80,12 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             $shelves = "Favourites%";
 
             //insert user data into database
-            $sql = "INSERT INTO $tablename (username,email,password,Shelves) "."VALUES ('$username','$email','$password','$shelves')";
-
-            if($conn->query($sql) === true){    
+            $stmt = $conn->prepare("INSERT INTO $tablename (username,email,password,Shelves) "."VALUES (?,?,?,?)");
+            if(!$stmt){
+                echo "Error preparing statement ".htmlspecialchars($conn->error);
+            }
+            $stmt->bind_param("ssss",$username,$email,$password,$shelves);
+            if($stmt->execute() === true){    
                 $_SESSION['message'] = "Registration succesful! Added $username to the database!";
                 header("location: home.php");  
     		}
@@ -91,6 +94,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                	$_SESSION['message'] = 'User could not be added to the database!';
             }
             
+            $stmt->close();
             $conn->close();   
 
     	}

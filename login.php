@@ -15,8 +15,13 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 	include_once("createDb.php");
 
-	$sql = "SELECT * FROM user WHERE username='".$username."';";
-	$result = $conn->query($sql);
+	$stmt = $conn->prepare("SELECT * FROM user WHERE username= ?;");
+	if(!$stmt){
+		echo "Error preparing statement ".htmlspecialchars($conn->error);
+	}
+	$stmt->bind_param("s",$username);
+	$stmt->execute();
+	$result = $stmt->get_result();
 
 	if($result->num_rows>0){
 		while($row = $result->fetch_assoc()){
@@ -34,7 +39,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 	}	
 	else{
 		$_SESSION['message'] = "Username doesn't exist!";
-	}	
+	}
+
+	$stmt->close();
+		
 }
 
 ?>

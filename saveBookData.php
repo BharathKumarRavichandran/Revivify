@@ -30,26 +30,44 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$status = $_POST['status'];
 		$likeStatus = "no";
 
-		$sql = "SELECT * FROM $tablename WHERE VolumeId = '$volumeId';";
-		$result = $conn->query($sql);	
+		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE VolumeId = ?;");
+		if(!$stmt){
+			echo "Error preparing statement ".htmlspecialchars($conn->error);
+		}
+		$stmt->bind_param("s",$volumeId);
+		$stmt->execute();
+		$result = $stmt->get_result();	
+		$stmt->close();
 
 		if($result->num_rows>0){
 			while($row = $result->fetch_assoc()){
 
-				$sql = "UPDATE $tablename SET Status='$status' WHERE VolumeId = '$volumeId';";
-				$conn->query($sql);					
+				$stmt = $conn->prepare("UPDATE $tablename SET Status=? WHERE VolumeId = ?;");
+				if(!$stmt){
+					echo "Error preparing statement ".htmlspecialchars($conn->error);
+				}
+				$stmt->bind_param("ss",$status,$volumeId);
+				$stmt->execute();
+				$stmt->close();					
 
 			}
 		}	
 
 		else{
 
-			$sql = "INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES ('$volumeId','$title','$author','$imgLink','$likeStatus','$status');";
-			$result = $conn->query($sql);
+			$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES (?,?,?,?,?,?);");
+			if(!$stmt){
+				echo "Error preparing statement ".htmlspecialchars($conn->error);
+			}
+			$stmt->bind_param("ssssss",$volumeId,$title,$author,$imgLink,$likeStatus,$status);
+			$stmt->execute();
+			$result = $stmt->get_result();
 
 			if (!$result){
 				trigger_error('Invalid query: ' . $conn->error);
 			}
+
+			$stmt->close();
 
 		}		
 
@@ -63,8 +81,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$imgLink = $_POST['imgLink'];
 		$column = $_POST['columnName'];
 
-		$sql = "SELECT * FROM $tablename WHERE VolumeId = '$volumeId';";
-		$result = $conn->query($sql);	
+		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE VolumeId = ?;");
+		if(!$stmt){
+			echo "Error preparing statement ".htmlspecialchars($conn->error);
+		}
+		$stmt->bind_param("s",$volumeId);
+		$stmt->execute();
+		$result = $stmt->get_result();	
+		$stmt->close();
 
 		if($result->num_rows>0){
 			while($row = $result->fetch_assoc()){
@@ -77,22 +101,35 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 					$status = "yes";
 				}
 
-				$sql = "UPDATE $tablename SET $column ='$status' WHERE VolumeId = '$volumeId';";
-				$conn->query($sql);					
+				$stmt = $conn->prepare("UPDATE $tablename SET $column = ? WHERE VolumeId = ?;");
+				if(!$stmt){
+					echo "Error preparing statement ".htmlspecialchars($conn->error);
+				}
+				$stmt->bind_param("ss",$status,$volumeId);
+				$stmt->execute();		
+				$stmt->close();			
 
 			}
 		}
+
 
 		else{
 
 				$likeStatus = "no";
 
-				$sql = "INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES ('$volumeId','$title','$author','$imgLink','$likeStatus','$status');";
-				$result = $conn->query($sql);
+				$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES (?,?,?,?,?,?);");
+				if(!$stmt){
+					echo "Error preparing statement ".htmlspecialchars($conn->error);
+				}
+				$stmt->bind_param("ssssss",$volumeId,$title,$author,$imgLink,$likeStatus,$status);
+				$stmt->execute();
+				$result = $stmt->get_result();
 
 				if (!$result){
 					trigger_error('Invalid query: ' . $conn->error);
 				}
+
+				$stmt->close();
 
 		}		
 
@@ -103,13 +140,22 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		$shelfName = $_POST["shelfName"];
 
-		$sql = "ALTER TABLE $tablename ADD $shelfName VARCHAR(500);";
-		$conn->query($sql);
+		$stmt = $conn->prepare("ALTER TABLE $tablename ADD $shelfName VARCHAR(500);");
+		if(!$stmt){
+			echo "Error preparing statement ".htmlspecialchars($conn->error);
+		}
+		$stmt->execute();
+		$stmt->close();
 
 		$shelfName.="%";
 
-		$sql = "UPDATE user SET Shelves=concat(Shelves,'$shelfName') WHERE username = '$username';";
-		$conn->query($sql);
+		$stmt = $conn->prepare("UPDATE user SET Shelves=concat(Shelves,?) WHERE username = ?;");
+		if(!$stmt){
+			echo "Error preparing statement ".htmlspecialchars($conn->error);
+		}
+		$stmt->bind_param("ss",$shelfName,$username);
+		$stmt->execute();
+		$stmt->close();
 
 	}
 
@@ -122,8 +168,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$likeStatus = $_POST['likeStatus'];
 		$column = $_POST['columnName'];
 
-		$sql = "SELECT * FROM $tablename WHERE VolumeId = '$volumeId';";
-		$result = $conn->query($sql);	
+		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE VolumeId = ?;");
+		if(!$stmt){
+			echo "Error preparing statement ".htmlspecialchars($conn->error);
+		}
+		$stmt->bind_param("s",$volumeId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();	
 
 		if($result->num_rows>0){
 			while($row = $result->fetch_assoc()){
@@ -136,20 +188,28 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 					$likeStatus = "yes";
 				}
 
-				$sql = "UPDATE $tablename SET $column ='$likeStatus' WHERE VolumeId = '$volumeId';";
-				$conn->query($sql);					
-
+				$stmt = $conn->prepare("UPDATE $tablename SET $column = ? WHERE VolumeId = ?;");
+				if(!$stmt){
+					echo "Error preparing statement ".htmlspecialchars($conn->error);
+				}
+				$stmt->bind_param("ss",$likeStatus,$volumeId);
+				$stmt->execute();		
+				$stmt->close();			
 			}
 		}
 
 		else{
 
-			$sql = "INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked) "."VALUES ('$volumeId','$title','$author','$imgLink','$likeStatus');";
-			$result = $conn->query($sql);
+			$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked) "."VALUES (?,?,?,?,?);");
+			$stmt->bind_param("sssss",$volumeId,$title,$author,$imgLink,$likeStatus);
+			$stmt->execute();
+			$result = $stmt->get_result();
 
 			if (!$result){
 				trigger_error('Invalid query: ' . $conn->error);
 			}
+
+			$stmt->close();
 
 		}		
 
