@@ -371,6 +371,8 @@ function shelfClick(y){
     var k=0;
     var purpose;
     var params;
+    var dropBtnTextChange = false;
+    var dropBtnText;
 
     var children = document.getElementById("sidenav").children;
 	for(t=0;t<children.length;t++){
@@ -384,11 +386,16 @@ function shelfClick(y){
     if(columnName.trim()=="Want To Read"||columnName.trim()=="Currently Reading"||columnName.trim()=="Finished Reading"){
     	purpose = "aShelfClick";
     	params = "status="+columnName+"&purpose="+purpose;
+    	dropBtnTextChange = true;
+    	dropBtnText = columnName;
     }
     else{
     	purpose = "adShelfClick";
+    	dropBtnTextChange = true;
+    	dropBtnText = columnName;
     	if(columnName.trim()=="Books Liked"){
     		columnName = "Liked";
+    		dropBtnTextChange = false;
     	}
     	params = "columnName="+columnName+"&status=yes"+"&purpose="+purpose;
     }
@@ -422,6 +429,9 @@ function shelfClick(y){
 		    		volumeId = data[i].VolumeId;
 		    		liked = data[i].Liked;
 		    		createBox(cards,volumeId,title,author,imgLink,liked);
+		    		if(dropBtnTextChange==true){
+	    				document.getElementById("dropBtn"+cards).innerHTML = dropBtnText;
+	    			}
 		    		cards++;
 	    		}
 
