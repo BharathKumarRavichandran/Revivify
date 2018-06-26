@@ -27,6 +27,11 @@ else{
   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 }
 
+searchValue.addEventListener("keyup",function(event){
+	if(event.keyCode==13){ //enter key
+		search();
+	}
+},false);
 
 function initialise(){
 
@@ -530,6 +535,7 @@ function likeButtonClick(y){
 function appendSearchBooks(){
 
 	var appended=false;
+	var dropBtnText;
 	cards=0;
 
 	for(var c=0;c<searchData.items.length;c++){
@@ -542,7 +548,11 @@ function appendSearchBooks(){
 		    	imgLink = decodeURIComponent(imgLink);
 		    	volumeId = allBookData[d].VolumeId;
 		    	liked = allBookData[d].Liked;
+		    	dropBtnText = allBookData[d].Status;
 		    	createBox(cards,volumeId,title,author,imgLink,liked);
+		    	if(dropBtnText!=="NULL"){
+		    		document.getElementById("dropBtn"+cards).innerHTML = dropBtnText;
+		    	}
 		    	appended=true;
 			}
 		}
