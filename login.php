@@ -59,6 +59,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 			margin: 0;
 			padding: 0;
 			font-family: 'Sofia';
+			background-color: #e9e9e9;
 		}
 
 		.title{
@@ -141,6 +142,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 			text-align: center;
 			font-size: 1.3em;
 			letter-spacing: 4px;
+			color: #111;
 		}
 
 		#heart{
@@ -149,7 +151,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 		#nameLink{
 			text-decoration: none;
-			color: orange;
+			color: brown;
 		}
 
 	</style>
