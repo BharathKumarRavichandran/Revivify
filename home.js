@@ -112,6 +112,7 @@ function searchSuggestionsAppend(k,title,author,imgLink,volumeId){
 	document.getElementById("searchSuggestionsRegion").appendChild(div);
 
 	idSpan.setAttribute("id","suggVolId"+k);
+	idSpan.setAttribute("style","display:none");
 	a.setAttribute("id","a"+k);
 	a.setAttribute("class","searchSuggestionsA container card bg-light");
 	a.setAttribute("onclick","searchSuggestionClick(this);")
@@ -330,7 +331,7 @@ function createBox(k,volumeId,title,author,imgLink,liked){
 	var titleText = document.createTextNode(title);
 	var bySpanText = document.createTextNode("by ");
 	var authorText = document.createTextNode(author);
-	var dropbtnText = document.createTextNode("Want To Read");
+	var dropbtnText = document.createTextNode("");
 	var a0Text = document.createTextNode("Want To Read");
 	var a1Text = document.createTextNode("Currently Reading");
 	var a2Text = document.createTextNode("Finished Reading");
@@ -656,7 +657,7 @@ function getBookData(){//function does the same job(get data of all the books in
 
 }
 
-function getAllBooksData(){//function which gets data of all the books in database
+function getAllBooksData(){//function which gets data of all the books in database<button id="searchButtonId" onclick="search()"><i class="fa fa-search"></i></button>	
 
 	var xmlhttp;
 	if (window.XMLHttpRequest){
