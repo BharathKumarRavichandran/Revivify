@@ -672,7 +672,7 @@ function shareButtonCreator(k,divhref,ahref){
 	shareDiv.setAttribute("id","shareButton"+k);
 	shareDiv.setAttribute("class","fb-share-button shareButton");
 	shareDiv.setAttribute("data-href",divhref);
-	shareDiv.setAttribute("data-layout","button_count");
+	shareDiv.setAttribute("data-layout","button");
 	shareDiv.setAttribute("data-size","small");
 	shareDiv.setAttribute("data-mobile-iframe","true");
 	shareA.setAttribute("target","_blank");
