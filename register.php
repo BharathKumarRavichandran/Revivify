@@ -114,6 +114,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title>Sign Up | Revivify</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
     <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <style type="text/css">
