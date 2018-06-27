@@ -358,6 +358,27 @@ $_SESSION['message']="";
 			margin-left: 70%;
 		}
 
+		#searchSuggestionsRegion{
+			position: fixed;
+			z-index: 1;
+		}
+
+		#searchSuggestionsRegion .container{
+			width: 400px;
+			height: auto;
+			overflow: auto;
+			padding: 5px;
+		}
+
+		.searchSuggestionsThumbnail{
+			width: 50px;
+			height: 60px;
+		}
+
+		.searchSuggestionsTitle{
+			font-size: 15px;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;
@@ -395,7 +416,7 @@ $_SESSION['message']="";
 		<a class="options" href="#home" onclick="home()">Home</a>
 	  	<a class="active options" onclick="profile()">Profile</a>
 	  	<span class="search-container">
-	      	<input id="searchValue" type="text" placeholder="Search" name="search">
+	      	<input id="searchValue" type="text" placeholder="Search" name="search" onfocus="searchSuggestions(this.value);" onkeyup="searchSuggestions(this.value);">
 	      	<select id="selectId">
 	      		<option>Title</option>
 	      		<option>Author</option>
@@ -403,7 +424,7 @@ $_SESSION['message']="";
 	      		<option>ISBN</option>
 	    		<option>Subject</option>
 	      	</select>
-	      	<button onclick="search()"><i class="fa fa-search"></i></button>	
+	      	<button id="searchButtonId" onclick="search()"><i class="fa fa-search"></i></button>		
 	  	</span>
 	</div>	
 	<div class="sidenav" id="sidenav">
@@ -429,6 +450,7 @@ $_SESSION['message']="";
 			</div>
 		</div>
 	</div>
+	<div id="searchSuggestionsRegion" class="search-container"></div>
 	<div id="activityRegion" class="main" style="margin-top: 20vh;">
 		
 	</div>
@@ -436,6 +458,7 @@ $_SESSION['message']="";
 <script type="text/javascript">
 
 	document.getElementById("sidenav").style.top = document.getElementById("navbar").offsetHeight+"px";
+	document.getElementById("searchSuggestionsRegion").style.left = document.getElementById("searchValue").offsetLeft-20+"px";
 
 	window.onscroll = function() {myFunction()};
 

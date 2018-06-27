@@ -8,11 +8,14 @@ var liked;
 var activity;
 var cards=0;
 var shelves = 0;
-var searchData;
-var allBookData;
+var searchData;//stores the search suggestion book data in database
+var bookData;//stores all the book data in database
+var searchBookData;//stores all the search results book data in database
+var allBookData;//stores all the book data in database
 var searchvalue = document.getElementById("searchValue");
 var select = document.getElementById("selectId");
 var activityRegion = document.getElementById("activityRegion");
+var searchSuggestionsRegion = document.getElementById("searchSuggestionsRegion");
 var modal = document.getElementById("modalId");
 
 var shelvesArrayInit = new Array();	
@@ -32,6 +35,135 @@ searchValue.addEventListener("keyup",function(event){
 		search();
 	}
 },false);
+
+document.addEventListener("click",function(event){
+
+	if(event.target!=document.getElementById("searchValue")){
+		searchFocusOut();
+	}
+
+},false);
+
+function searchSuggestions(text){
+
+	if(text!=""){
+
+		searchSuggestionsRegion.style.display = "block";
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var url = "https://www.googleapis.com/books/v1/volumes?q="+text;
+		var data;
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+
+		    while(searchSuggestionsRegion.firstChild){
+				searchSuggestionsRegion.removeChild(searchSuggestionsRegion.firstChild);
+			} 	
+		    	data = JSON.parse(this.responseText);
+		    	if(data.totalItems!=0){
+		    		var numSuggestions = 4;
+		    		numSuggestions = 4<data.items.length?4:data.items.length;
+			    	for(i=0;i<numSuggestions;i++){
+			    		title = data.items[i].volumeInfo.title;
+			    		author = data.items[i].volumeInfo.authors;
+			    		imgLink = data.items[i].volumeInfo.imageLinks.smallThumbnail;
+			    		volumeId = data.items[i].id;
+			    		searchSuggestionsAppend(i,title,author,imgLink,volumeId);
+			    	}
+			    }	
+		    }
+		};
+		xmlhttp.open("GET",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send();
+	}
+
+	else{
+		searchFocusOut();
+	}
+	
+}
+
+function searchSuggestionsAppend(k,title,author,imgLink,volumeId){
+
+	var div = document.createElement("div");
+	var a = document.createElement("a");
+	var imgSpan = document.createElement("span");
+	var img = document.createElement("img");
+	var titleSpan = document.createElement("span");
+	var authorDiv = document.createElement("div");
+	var idSpan = document.createElement("span");
+
+	var titleSpanText = document.createTextNode(title);
+	var authorDivText = document.createTextNode(author);
+	var idSpanText = document.createTextNode(volumeId);
+	titleSpan.appendChild(titleSpanText);
+	authorDiv.appendChild(authorDivText);
+	idSpan.appendChild(idSpanText);
+
+	imgSpan.appendChild(img);
+	a.appendChild(imgSpan);
+	titleSpan.appendChild(idSpan);
+	a.appendChild(titleSpan);
+	div.appendChild(a);
+	document.getElementById("searchSuggestionsRegion").appendChild(div);
+
+	idSpan.setAttribute("id","suggVolId"+k);
+	a.setAttribute("id","a"+k);
+	a.setAttribute("class","searchSuggestionsA container card bg-light");
+	a.setAttribute("onclick","searchSuggestionClick(this);")
+	img.setAttribute("src",imgLink);
+	img.setAttribute("class","searchSuggestionsThumbnail");
+	titleSpan.setAttribute("class","searchSuggestionsTitle")
+
+}
+
+function searchSuggestionClick(y){
+
+	var idAttr = y.getAttribute("id");
+    var res = idAttr.split("a");
+    var k = parseInt(res[1]);
+    var volumeId = document.getElementById("suggVolId"+k).innerHTML;
+
+	while(activityRegion.firstChild){
+			activityRegion.removeChild(activityRegion.firstChild);
+		} 
+
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var url = "https://www.googleapis.com/books/v1/volumes/"+volumeId;
+	var data;
+	xmlhttp.onreadystatechange = function(){
+	   if(this.readyState==4&&this.status==200){ 
+	    	cards=0;	
+	    	searchBookData = JSON.parse(this.responseText);
+	    	getBookData();	
+	    }
+	};
+	xmlhttp.open("GET",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send();
+
+}
+
+function searchFocusOut(){
+
+	while(searchSuggestionsRegion.firstChild){
+		searchSuggestionsRegion.removeChild(searchSuggestionsRegion.firstChild);
+	}
+	searchSuggestionsRegion.style.display = "none";
+
+}
 
 function initialise(){
 
@@ -533,7 +665,42 @@ function likeButtonClick(y){
  
 }
 
-function appendSearchBooks(){
+function appendSearchBook(){//For appending search suggestion click book
+
+	var appended=false;
+	var dropBtnText;
+	cards=0;
+
+	appended=false;
+	for(var d=0;d<bookData.length;d++){
+		if(searchBookData.id==bookData[d].VolumeId){
+			title = bookData[d].Title;
+		    author = bookData[d].Authors;
+		   	imgLink = bookData[d].ImgLink;
+		   	imgLink = decodeURIComponent(imgLink);
+		   	volumeId = bookData[d].VolumeId;
+		   	liked = bookData[d].Liked;
+	    	dropBtnText = bookData[d].Status;
+	    	createBox(cards,volumeId,title,author,imgLink,liked);
+		    if(dropBtnText!=="NULL"){
+		   		document.getElementById("dropBtn"+cards).innerHTML = dropBtnText;
+		   	}
+		   	appended=true;
+		}
+	}
+	if(appended==false){
+		title = searchBookData.volumeInfo.title;
+	    author = searchBookData.volumeInfo.authors;
+	    imgLink = searchBookData.volumeInfo.imageLinks.thumbnail;
+	    volumeId = searchBookData.id;
+	    liked="no";
+	    createBox(cards,volumeId,title,author,imgLink,liked);
+	}
+	cards++;
+	shelvesInit();
+}
+
+function appendSearchBooks(){//For appending search books
 
 	var appended=false;
 	var dropBtnText;
@@ -567,10 +734,34 @@ function appendSearchBooks(){
 		}
 		cards++;
 	}
+	shelvesInit();
 }
 
+function getBookData(){//function does the same job(get data of all the books in database) as getAllBooksData() except it calls appendSearchBook() instead of appendSearchBooks
 
-function getAllBooksData(){
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var data;
+	var params="";
+	var url = "getAllBooksData.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	bookData = JSON.parse(this.responseText);
+	    	appendSearchBook();
+	    }
+	};
+	xmlhttp.open("POST",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function getAllBooksData(){//function which gets data of all the books in database
 
 	var xmlhttp;
 	if (window.XMLHttpRequest){
