@@ -79,12 +79,6 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			}
 			$stmt->bind_param("ssssss",$volumeId,$title,$author,$imgLink,$likeStatus,$status);
 			$stmt->execute();
-			$result = $stmt->get_result();
-
-			if (!$result){
-				trigger_error('Invalid query: ' . $conn->error);
-			}
-
 			$stmt->close();
 
 		}		
