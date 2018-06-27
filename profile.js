@@ -219,6 +219,7 @@ function createBox(k,volumeId,title,author,imgLink,liked){
 	a1.setAttribute("id","1a"+k);
 	a2.setAttribute("id","2a"+k);
 	ad0.setAttribute("id","0ad"+k);
+	likeDiv.setAttribute("id","likeDiv"+k);
 	i.setAttribute("id","like"+k);
 	idDiv.setAttribute("id","volumeId"+k);
 
@@ -626,13 +627,13 @@ function activityClick(){
 			    	liked = data[i].Liked;
 			    	activity = data[i].Activity;
 
-			    	var div = document.createElement("div");
-			    	var divText = document.createTextNode(activity);
-			    	div.appendChild(divText);
-			    	activityRegion.appendChild(div);
-			    	div.setAttribute("class","activityText");
+			    	var divhref = "localhost/Revivify/profile.php";
+			    	var ahref = "https://www.facebook.com/sharer/sharer.php?u=localhost%2fRevivify%2fprofile.php&amp;src=sdkpreparse";
 
+					activityTextCreator(cards,activity);			    	
 			    	createBox(cards,volumeId,title,author,imgLink,liked);
+			    	shareButtonCreator(cards,divhref,ahref);
+			    	
 			    	cards++;
 		    	}
 
@@ -647,6 +648,36 @@ function activityClick(){
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);	
 
+}
+
+function activityTextCreator(k,activity){
+
+	var div = document.createElement("div");
+	var divText = document.createTextNode(activity);
+	div.appendChild(divText);
+	activityRegion.appendChild(div);
+	div.setAttribute("id","activityText"+k);
+	div.setAttribute("class","activityText");
+
+}
+
+function shareButtonCreator(k,divhref,ahref){
+	var shareDiv = document.createElement("span");
+	var shareA = document.createElement("a");
+	var shareAText = document.createTextNode("Share");
+	shareA.appendChild(shareAText);
+	shareDiv.appendChild(shareA);
+	document.getElementById("likeDiv"+k).appendChild(shareDiv);
+
+	shareDiv.setAttribute("id","shareButton"+k);
+	shareDiv.setAttribute("class","fb-share-button shareButton");
+	shareDiv.setAttribute("data-href",divhref);
+	shareDiv.setAttribute("data-layout","button_count");
+	shareDiv.setAttribute("data-size","small");
+	shareDiv.setAttribute("data-mobile-iframe","true");
+	shareA.setAttribute("target","_blank");
+	shareA.setAttribute("href","https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse");
+	shareA.setAttribute("class","fb-xfbml-parse-ignore");
 }
 
 function noActivityDisplay(){

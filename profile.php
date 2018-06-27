@@ -353,6 +353,10 @@ $_SESSION['message']="";
 			font-size: 1.3em;
 		}
 
+		.shareButton{
+			margin-left: 70%;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;
@@ -375,6 +379,16 @@ $_SESSION['message']="";
 	</style>
 </head>
 <body>
+
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0&appId=1812171645472822&autoLogAppEvents=1';
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+
 	<div id="navbar" class="topnav">
 		<a id="title" class="title" onclick="home()">Revivify</a>
 		<a class="options" href="#home" onclick="home()">Home</a>
@@ -417,6 +431,7 @@ $_SESSION['message']="";
 	<div id="activityRegion" class="main" style="margin-top: 20vh;">
 		
 	</div>
+
 <script type="text/javascript">
 
 	document.getElementById("sidenav").style.top = document.getElementById("navbar").offsetHeight+"px";
