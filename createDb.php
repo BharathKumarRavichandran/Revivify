@@ -12,6 +12,8 @@ $sql = "CREATE TABLE IF NOT EXISTS user(
 		email VARCHAR(320) NOT NULL,
 		password VARCHAR(128) NOT NULL,
 		Shelves VARCHAR(100) NOT NULL,
+		ActivityVisibility VARCHAR(100) NOT NULL,
+		UsersActivity VARCHAR(1000) NOT NULL,
 		Following VARCHAR(500) NOT NULL,
 		Followers VARCHAR(500) NOT NULL,
 		PRIMARY KEY (id,username)
