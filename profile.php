@@ -379,6 +379,21 @@ $_SESSION['message']="";
 			font-size: 15px;
 		}
 
+		.userBoxClass{
+			padding: 20px;
+			width: 40%;
+			margin-left: 26%;
+			margin-bottom: 25px;
+		}
+
+		.userBtn{
+			float: right;
+		}
+
+		.userNameDisp{
+			font-size: 25px;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;
@@ -423,6 +438,7 @@ $_SESSION['message']="";
 	      		<option>Publisher</option>
 	      		<option>ISBN</option>
 	    		<option>Subject</option>
+	    		<option>Users</option>
 	      	</select>
 	      	<button id="searchButtonId" onclick="search()"><i class="fa fa-search"></i></button>		
 	  	</span>

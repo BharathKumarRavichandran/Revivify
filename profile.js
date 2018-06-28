@@ -46,7 +46,9 @@ document.addEventListener("click",function(event){
 
 function searchSuggestions(text){
 
-	if(text!=""){
+	var optValue = select.options[select.selectedIndex].text;
+
+	if(text!=""&&optValue!="Users"){
 
 		searchSuggestionsRegion.style.display = "block";
 		var xmlhttp;
@@ -204,66 +206,199 @@ function shelvesInit(){
 
 function search(){
 
-	var k=0;
-
 	while(activityRegion.firstChild){
 		activityRegion.removeChild(activityRegion.firstChild);
 	}
-	
-	var url = "https://www.googleapis.com/books/v1/volumes?q=";
+
 	var optValue = select.options[select.selectedIndex].text;
-	var searchString;
-	searchValue = searchvalue.value;
 
-	if(optValue=="Title"){
-		searchString = "intitle:"+searchValue;
+	if(optValue=="Users"){
+
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var userSearchValue = searchValue.value;
+		var url = "getUserSearchData.php";
+		var params = "userSearchValue="+userSearchValue;
+		var userData;
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+		    	cards=0;
+		    	userData = JSON.parse(this.responseText);
+		    	if(userData.length==0){
+		    		noUsersDisplay();
+		    	}
+		    	else{
+		    		var currentUser = userData[0].currentUser;
+		    		for(var g=0;g<userData.length;g++){
+			
+		    			var btnText = "Follow";
+		    			var isfollowing = false;
+		    			if(userData[g].Username==currentUser){
+			    			btnText = "View Profile";
+			    		}
+		    			if(userData[g].Followers!="NULL"||!userData[g].Followers){
+		    				var followingArray = userData[g].Followers.split(",");
+			    			for(var x=0;x<followingArray.length-1;x++){
+			    				if(currentUser==followingArray[x]){
+			    					isfollowing = true;
+			    					btnText = "Following";
+			    				}
+			    			}
+		    			}
+		    			createUserBox(cards,userData[g].Username,btnText);
+		    			cards++;
+		    		}
+		    	}
+		   	}
+		    searchValue.value = "";
+		    searchValue.placeholder = "Search";
+		};
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send(params);
+
 	}
+	else{
 
-	else if(optValue=="Author"){
-		searchString = "inauthor:"+searchValue;
-	}
+		var k=0;
+		var url = "https://www.googleapis.com/books/v1/volumes?q=";
+		var searchString;
+		searchValue = searchvalue.value;
 
-	else if(optValue=="Publisher"){
-		searchString = "inpublisher:"+searchValue;
-	}
+		if(optValue=="Title"){
+			searchString = "intitle:"+searchValue;
+		}
 
-	else if(optValue=="ISBN"){
-		searchString = "isbn:"+searchValue;
-	}
+		else if(optValue=="Author"){
+			searchString = "inauthor:"+searchValue;
+		}
 
-	else if(optValue=="Subject"){
-		searchString = "subject:"+searchValue;
-	}
+		else if(optValue=="Publisher"){
+			searchString = "inpublisher:"+searchValue;
+		}
 
-	url+=searchString;
+		else if(optValue=="ISBN"){
+			searchString = "isbn:"+searchValue;
+		}
+
+		else if(optValue=="Subject"){
+			searchString = "subject:"+searchValue;
+		}
+
+		url+=searchString;
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data;
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+		    	cards=0;
+		    	data = JSON.parse(this.responseText);
+		    	searchData = JSON.parse(this.responseText);
+		    	if(data.totalItems==0){
+		    		noBooksDisplay();
+		    	}
+		    	else{
+		    		getAllBooksData();
+		    	}
+		    }
+
+		    searchValue.value = "";
+		    searchValue.placeholder = "Search";
+		};
+		xmlhttp.open("GET",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send();
+
+	}	
+
+}
+
+function createUserBox(cards,username,btnText){
+
+	var li = document.createElement("span");
+	var userSpan = document.createElement("span");
+	var btnSpan = document.createElement("span");
+	var button = document.createElement("button");
+
+	var userSpanText = document.createTextNode(username);
+	var buttonText = document.createTextNode(btnText);
+
+	userSpan.appendChild(userSpanText);
+	button.appendChild(buttonText);
+
+	li.appendChild(userSpan);
+	btnSpan.appendChild(button);
+	li.appendChild(btnSpan);
+	activityRegion.appendChild(li);
+
+	userSpan.setAttribute("id","username"+cards);
+	button.setAttribute("id","followBtn"+cards);
+
+	li.setAttribute("class","userBoxClass liClass container card card-body bg-light");
+	li.setAttribute("style","display:inline-block");
+	userSpan.setAttribute("class","userNameDisp");
+	button.setAttribute("class","userBtn btn btn-brown");
+	button.setAttribute("onclick","followBtnClick(this)");
+
+}
+
+function followBtnClick(y){
+
+	var idAttr = y.getAttribute("id");
+    var res = idAttr.split("followBtn");
+    var k = parseInt(res[1]);
+    var click;
+    click = y.innerHTML;
+
+    if(y.innerHTML=="Follow"){
+    	y.innerHTML = "Following";
+    } 
+    else if(y.innerHTML=="Following"){
+		y.innerHTML = "Follow";
+    }
+    else if(y.innerHTML=="View Profile"){
+    	window.location = "profile.php";
+    }
+
+    var followUsername = document.getElementById("username"+k).innerHTML;
+    var purpose = "followBtnClick";
+
 	var xmlhttp;
-	if (window.XMLHttpRequest) {
+	if (window.XMLHttpRequest){
 	  		xmlhttp = new XMLHttpRequest();
 	} 
 	 else{
 	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var data;
+	var params = "followUsername="+followUsername+"&click="+click+"&purpose="+purpose;
+	var url = "followUser.php";
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
-	    	cards=0;
-	    	data = JSON.parse(this.responseText);
-	    	searchData = JSON.parse(this.responseText);
-	    	if(data.totalItems==0){
-	    		noBooksDisplay();
-	    	}
-	    	else{
-	    		getAllBooksData();
-	    	}
+	    	console.log(this.responseText);
 	    }
-
-	    searchValue.value = "";
-	    searchValue.placeholder = "Search";
 	};
-	xmlhttp.open("GET",url,true);
+	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send();
+	xmlhttp.send(params);
 
+}
+
+function noUsersDisplay(){
+	var div = document.createElement("div");
+	var divText = document.createTextNode("No Users to display!");
+	div.appendChild(divText);
+	activityRegion.appendChild(div);
+	div.setAttribute("class","no-books card bg-light");
 }
 
 function noBooksDisplay(){
