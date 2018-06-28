@@ -37,6 +37,16 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$stmt->execute();
 			$stmt->close();	
 
+			$activity = $username." started following ".$followUser.".,";
+
+			$stmt = $conn->prepare("UPDATE $tablename SET UsersActivity=concat(UsersActivity,?) WHERE username = ?;");
+			if(!$stmt){
+				echo "Error preparing statement ".htmlspecialchars($conn->error);
+			}
+			$stmt->bind_param("ss",$activity,$username);
+			$stmt->execute();
+			$stmt->close();
+
 			$followUser.=",";
 
 			$stmt = $conn->prepare("UPDATE $tablename SET Following=concat(Following,?) WHERE username = ?;");
@@ -45,7 +55,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			}
 			$stmt->bind_param("ss",$followUser,$username);
 			$stmt->execute();
-			$stmt->close();	
+			$stmt->close();
 
 		}
 	
@@ -62,9 +72,19 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$stmt->execute();
 			$stmt->close();	
 
+			$activity = $username." started following ".$followUser.".,";
+
+			$stmt = $conn->prepare("UPDATE $tablename SET UsersActivity = REPLACE(UsersActivity,?,'') WHERE username = ?;");
+			if(!$stmt){
+				echo "Error preparing statement ".htmlspecialchars($conn->error);
+			}
+			$stmt->bind_param("ss",$activity,$username);
+			$stmt->execute();
+			$stmt->close();
+
 			$followUser.=",";
 
-			$stmt = $conn->prepare("UPDATE $tablename SET Following= REPLACE(Following,?,'') WHERE username = ?;");
+			$stmt = $conn->prepare("UPDATE $tablename SET Following = REPLACE(Following,?,'') WHERE username = ?;");
 			if(!$stmt){
 				echo "Error preparing statement ".htmlspecialchars($conn->error);
 			}
