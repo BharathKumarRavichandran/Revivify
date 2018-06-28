@@ -78,13 +78,15 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             include("createDataTable.php");
 
             $shelves = "Favourites%";
+            $following = "";
+            $followers = "";
 
             //insert user data into database
-            $stmt = $conn->prepare("INSERT INTO $tablename (username,email,password,Shelves) "."VALUES (?,?,?,?)");
+            $stmt = $conn->prepare("INSERT INTO $tablename (username,email,password,Shelves,Following,Followers) "."VALUES (?,?,?,?,?,?)");
             if(!$stmt){
                 echo "Error preparing statement ".htmlspecialchars($conn->error);
             }
-            $stmt->bind_param("ssss",$username,$email,$password,$shelves);
+            $stmt->bind_param("ssss",$username,$email,$password,$shelves,$following,$followers);
             if($stmt->execute() === true){    
                 $_SESSION['message'] = "Registration succesful! Added $username to the database!";
                 header("location: home.php");  
