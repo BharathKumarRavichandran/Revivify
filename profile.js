@@ -6,6 +6,7 @@ var author;
 var volumeId;
 var liked;
 var activity;
+var activityVisibility;
 var cards=0;
 var shelves = 0;
 var searchData;//stores the search suggestion book data in database
@@ -1013,6 +1014,102 @@ function noActivityDisplay(){
 	div.appendChild(divText);
 	activityRegion.appendChild(div);
 	div.setAttribute("class","no-books card bg-light");
+}
+
+function settings(){
+
+	while(activityRegion.firstChild){
+		activityRegion.removeChild(activityRegion.firstChild);
+	}
+
+	getSliderValue();
+
+}
+
+function drawSlider(){
+
+	var div = document.createElement("div");
+	var nameDiv = document.createElement("div");
+	var label = document.createElement("label");
+	var input = document.createElement("input");
+	var span = document.createElement("span");
+
+	var name = document.createTextNode("Activity : Public");
+	nameDiv.appendChild(name);
+
+
+	label.appendChild(input);
+	label.appendChild(span);
+	div.appendChild(nameDiv);
+	div.appendChild(label);
+	activityRegion.appendChild(div);
+
+	input.setAttribute("onchange","sliderChange(this)");
+
+	div.setAttribute("class","sliderDiv container card bg-light");
+	nameDiv.setAttribute("class","sliderNameDiv");
+	label.setAttribute("class","switch");
+	input.setAttribute("type","checkbox");
+	if(activityVisibility=="public"){
+		input.setAttribute("checked","true");
+	}
+	span.setAttribute("class","slider round");
+
+}
+
+function getSliderValue(){
+
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var data;
+	var url = "activityChange.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	     activityVisibility = this.responseText.trim();
+	     drawSlider();
+	    }
+	};
+	xmlhttp.open("GET",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send();
+
+}
+
+function sliderChange(y){
+
+	if(y.checked==true){
+		activityVisibility="public";
+		y.setAttribute("checked","true");
+	}
+	else{
+		activityVisibility="private";
+		y.removeAttribute("checked");
+	}
+
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var data;
+	var params="activityVisibility="+activityVisibility;
+	var url = "activityChange.php";
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	     console.log(this.responseText);
+	    }
+	};
+	xmlhttp.open("POST",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
 }
 
 initialise();
