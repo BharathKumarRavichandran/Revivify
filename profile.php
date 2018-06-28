@@ -432,7 +432,7 @@ $_SESSION['message']="";
 		}
 
 		input:checked + .slider {
-		  background-color: #2196F3;
+		  background-color: #645045;
 		}
 
 		input:focus + .slider {
