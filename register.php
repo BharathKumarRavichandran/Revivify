@@ -23,7 +23,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
     if(!((isset($data->success))AND($data->success==true))){
         $_SESSION['message'] = 'Captcha Failed!';
-        $allow=0;
+        //$allow=0;
     }
 
     $username = $conn->real_escape_string($_POST['username']);
@@ -78,15 +78,17 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             include("createDataTable.php");
 
             $shelves = "Favourites%";
+            $activityVisibility = "public";
+            $usersActivity = "";
             $following = "";
             $followers = "";
 
             //insert user data into database
-            $stmt = $conn->prepare("INSERT INTO $tablename (username,email,password,Shelves,Following,Followers) "."VALUES (?,?,?,?,?,?)");
+            $stmt = $conn->prepare("INSERT INTO $tablename (username,email,password,Shelves,ActivityVisibility,UsersActivity,Following,Followers) "."VALUES (?,?,?,?,?,?,?,?)");
             if(!$stmt){
                 echo "Error preparing statement ".htmlspecialchars($conn->error);
             }
-            $stmt->bind_param("ssss",$username,$email,$password,$shelves,$following,$followers);
+            $stmt->bind_param("ssssssss",$username,$email,$password,$shelves,$activityVisibility,$usersActivity,$following,$followers);
             if($stmt->execute() === true){    
                 $_SESSION['message'] = "Registration succesful! Added $username to the database!";
                 header("location: home.php");  
