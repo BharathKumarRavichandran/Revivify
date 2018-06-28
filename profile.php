@@ -465,6 +465,23 @@ $_SESSION['message']="";
 			padding: 5px;
 		}
 
+		#activitySelect{
+			margin-bottom: 10vh;
+			margin-left: 1vw;
+			font-size: 1.3em;
+			height: 40px;
+			min-width: 80px; 
+		}
+
+		.userActivityClass{
+			text-align: center;
+			padding: 10px;
+			font-size: 20px;
+			width: 60%;
+			overflow: auto;
+			margin-bottom: 30px;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;

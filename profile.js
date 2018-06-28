@@ -922,59 +922,145 @@ function getAllBooksData(){//function which gets data of all the books in databa
 
 }
 
+function activitySelectorDraw(){
+
+	var select = document.createElement("select");
+	var opt1 = document.createElement("option");
+	var opt2 = document.createElement("option");
+
+	var opt1Text = document.createTextNode("Books");
+	var opt2Text = document.createTextNode("Following");
+
+	opt1.appendChild(opt1Text);
+	opt2.appendChild(opt2Text);
+
+	select.appendChild(opt1);
+	select.appendChild(opt2);
+	activityRegion.appendChild(select);
+
+	select.setAttribute("id","activitySelect");
+	select.setAttribute("onchange","activityDraw()");
+
+}
+
+
 function activityClick(){
 
 	while(activityRegion.firstChild){
 		activityRegion.removeChild(activityRegion.firstChild);
 	}
-	
-	var xmlhttp;
-	if (window.XMLHttpRequest){
-	  		xmlhttp = new XMLHttpRequest();
-	} 
-	 else{
-	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+	activitySelectorDraw();
+	activityDraw();
+
+}	
+
+function activityDraw(){	
+
+	while (activityRegion.childNodes.length > 1) {
+    	activityRegion.removeChild(activityRegion.lastChild);
 	}
-	var data;
-	var params="";
-	var url = "getAllBooksData.php";
-	xmlhttp.onreadystatechange = function(){
-	    if(this.readyState==4&&this.status==200){
-			cards=0;
-		    data = JSON.parse(this.responseText);
-		    if(data.length==0){
-		    	noActivityDisplay();
-		    }	
-		    else{
-		    	for(i=data.length-1;i>=0;i--){
-			    	title = data[i].Title;
-			    	author = data[i].Authors;
-			    	imgLink = data[i].ImgLink;
-			    	imgLink = decodeURIComponent(imgLink);
-			    	volumeId = data[i].VolumeId;
-			    	liked = data[i].Liked;
-			    	activity = data[i].Activity;
 
-			    	var divhref = "localhost/Revivify/profile.php";
-			    	var ahref = "https://www.facebook.com/sharer/sharer.php?u=localhost%2fRevivify%2fprofile.php&amp;src=sdkpreparse";
+	var activityOptValue = document.getElementById("activitySelect").options[document.getElementById("activitySelect").selectedIndex].text;
 
-					activityTextCreator(cards,activity);			    	
-			    	createBox(cards,volumeId,title,author,imgLink,liked);
-			    	shareButtonCreator(cards,divhref,ahref);
-			    	
-			    	cards++;
-		    	}
+	if(activityOptValue=="Books"){
 
-		    	for(var t=1;t<shelvesArrayInit.length;t++){//For appending shelves name inside dropdown-menu
-		    		var shelfName = shelvesArrayInit[t];
-		    		shelfDropDownAppend(shelfName);	
-		    	}	
-		    }     
-	    }
-	};
-	xmlhttp.open("POST",url,true);
-	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send(params);	
+		var xmlhttp;
+		if (window.XMLHttpRequest){
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data;
+		var params="";
+		var url = "getAllBooksData.php";
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+				cards=0;
+			    data = JSON.parse(this.responseText);
+			    if(data.length==0){
+			    	noActivityDisplay();
+			    }	
+			    else{
+			    	for(i=data.length-1;i>=0;i--){
+				    	title = data[i].Title;
+				    	author = data[i].Authors;
+				    	imgLink = data[i].ImgLink;
+				    	imgLink = decodeURIComponent(imgLink);
+				    	volumeId = data[i].VolumeId;
+				    	liked = data[i].Liked;
+				    	activity = data[i].Activity;
+
+				    	var divhref = "localhost/Revivify/profile.php";
+				    	var ahref = "https://www.facebook.com/sharer/sharer.php?u=localhost%2fRevivify%2fprofile.php&amp;src=sdkpreparse";
+
+						activityTextCreator(cards,activity);			    	
+				    	createBox(cards,volumeId,title,author,imgLink,liked);
+				    	shareButtonCreator(cards,divhref,ahref);
+				    	
+				    	cards++;
+			    	}
+
+			    	for(var t=1;t<shelvesArrayInit.length;t++){//For appending shelves name inside dropdown-menu
+			    		var shelfName = shelvesArrayInit[t];
+			    		shelfDropDownAppend(shelfName);	
+			    	}	
+			    }     
+		    }
+		};
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send(params);
+
+	}
+
+	else if(activityOptValue=="Following"){
+
+		var xmlhttp;
+		if (window.XMLHttpRequest){
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data;
+		var url = "followUser.php";
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+				cards=0;
+			    data = (this.responseText).trim();
+			    var dataArray = data.split(",");
+			    if(dataArray.length==0){
+			    	noActivityDisplay();
+			    }	
+			    else{
+			    	for(i=dataArray.length-2;i>=0;i--){
+			    		var text = dataArray[i].trim();
+				    	userFollowingCardCreator(cards,text);
+				    	cards++;
+			    	}
+			    }     
+		    }
+		};
+		xmlhttp.open("GET",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send();
+
+	}
+
+}
+
+function userFollowingCardCreator(cards,text){
+
+	var div = document.createElement("div");
+	var text = document.createTextNode(text);
+
+	div.appendChild(text);
+	activityRegion.appendChild(div);
+
+	div.setAttribute("id","userActivity"+cards);
+	div.setAttribute("class","userActivityClass container card bg-light");
 
 }
 
