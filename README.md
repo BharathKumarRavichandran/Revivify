@@ -12,6 +12,10 @@ the user’s bookshelves, books that the user is currently reading and the activ
 user.
 * A search bar is provided in the home/profile page where the user can search books by Title,
 Author, Publisher, ISBN or subject.
+* Asynchronous Instant Searching. Users will be able to the see search suggestions changing as the user types (without refreshing/ pressing the search button).
+* User can view the profile page and activity of other users. Users can also make their
+activity - public/private. Private activities will not be visible to any other user except that
+individual.
 * Sign up process with real time indication of usernames availability and a Captcha.
 
 ----
@@ -73,4 +77,5 @@ Paste this public key in the 'data-sitekey' attribute,replacing "Your-public-key
 * [AJAX](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX)
 * [HTML](https://www.w3.org/html/)
 * [CSS](https://www.w3.org/Style/CSS/)
+* [Google Books API](https://developers.google.com/books/)
 * [reCaptcha API](https://www.google.com/recaptcha/)
