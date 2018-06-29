@@ -9,11 +9,50 @@ if(!isset($_SESSION["username"])){
 	exit();
 }
 
-if(isset($_SESSION["viewUser"])){
-	unset($_SESSION["viewUser"]);
+if(!isset($_SESSION["viewUser"])){
+	header('Location: home.php');
+	exit();
 }
 
-$_SESSION['message']="";
+$username = $_SESSION['username'];
+$viewUser = $_SESSION['viewUser'];
+$tablename = "user";
+
+$sql = "USE Revivify;";
+$conn->query($sql);
+
+$stmt = $conn->prepare("SELECT Following FROM $tablename WHERE username = ?;");
+if(!$stmt){
+	echo "Error preparing statement ".htmlspecialchars($conn->error);
+}
+	$stmt->bind_param("s",$username);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+
+	$array = array();
+	$followValue;
+
+	if($result->num_rows>0){
+		while($row = $result->fetch_assoc()){
+
+			$array = explode(",",$row["Following"]);
+			for($i=0;$i<count($array);$i++){
+
+				if($array[$i]==$viewUser){
+					$followValue = "Following";
+					break;
+				}
+				else if($viewUser==$username){
+					$followValue = "View Profile";
+				}
+				else if($array[$i]!=$viewUser){
+					$followValue = "Follow";
+				}
+
+			}
+		}
+	}
 
 ?>
 
@@ -21,7 +60,7 @@ $_SESSION['message']="";
 <html>
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<title>Home | Revivify</title>
+	<title>View Profile | Revivify</title>
 	<link rel="icon" type="image/png" href="assets/favicon.png">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
@@ -240,12 +279,49 @@ $_SESSION['message']="";
 		}
 
 		.userBtn{
-			float: right;
-			margin: 5px;
+			margin-top: 20px;
 		}
 
 		.userNameDisp{
 			font-size: 25px;
+		}
+
+		#activitySelect{
+			margin-bottom: 10vh;
+			margin-left: 5vw;
+			font-size: 1.3em;
+			height: 40px;
+			min-width: 80px; 
+		}
+
+		.userActivityClass{
+			text-align: center;
+			padding: 10px;
+			font-size: 20px;
+			width: 60%;
+			overflow: auto;
+			margin-bottom: 30px;
+		}
+
+		.activityText{
+			margin-left: 6%;
+			margin-bottom: -1%;
+			font-style: italic; 
+			font-weight: 700;
+			font-size: 1.3em;
+		}
+
+		.userDispBig{
+			margin-top: 10vh;
+			text-align: center;
+			font-size: 80px;
+		}
+
+		.recentText{
+			font-size: 40px;
+			text-align: center;
+			margin-top: 12vh;
+			margin-bottom: 6vh;
 		}
 
 		@media screen and (max-width: 600px) {
@@ -272,7 +348,7 @@ $_SESSION['message']="";
 <body>
 	<div id="navbar" class="topnav">
 		<a class="title" onclick="home()">Revivify</a>
-		<a class="active options" href="#home" onclick="home()">Home</a>
+		<a class="options" href="#home" onclick="home()">Home</a>
 	  	<a class="options" onclick="profile()">Profile</a>
 	  	<span class="search-container">
 	      	<input id="searchValue" type="text" placeholder="Search" name="search" onfocus="searchSuggestions(this.value);" onkeyup="searchSuggestions(this.value);">
@@ -287,8 +363,13 @@ $_SESSION['message']="";
 	      	<button id="searchButtonId" onclick="search()"><i class="fa fa-search"></i></button>	
 	  	</span>
 	</div>	
-	<div id="searchSuggestionsRegion" class="search-container"></div>
-	<div id="activityRegion" style="margin-top: 20vh;"></div>
+	<div id="removeRegion">
+		<div id="searchSuggestionsRegion" class="search-container"></div>
+		<div id="viewUser" class="userDispBig"><?= $viewUser ?></div>
+		<div style="text-align: center;"><button id="followBtn" class="userBtn btn btn-brown" onclick="followBtnClick(this)"><?= $followValue ?></button></div>
+		<div class="recentText">User's Recent Activity</div>
+		<div id="activityRegion"></div>
+	</div>	
 <script type="text/javascript">
 
 	document.getElementById("searchSuggestionsRegion").style.left = document.getElementById("searchValue").offsetLeft-20+"px";
@@ -310,6 +391,6 @@ $_SESSION['message']="";
 
 </script>	
 <script src="functions.js"></script>
-<script src="home.js"></script>
+<script src="viewProfile.js"></script>
 </body>
 </html>

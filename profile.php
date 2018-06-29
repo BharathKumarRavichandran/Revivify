@@ -9,6 +9,10 @@ if(!isset($_SESSION["username"])){
 	exit();
 }
 
+if(isset($_SESSION["viewUser"])){
+	unset($_SESSION["viewUser"]);
+}
+
 $_SESSION['message']="";
 
 ?>
@@ -388,6 +392,7 @@ $_SESSION['message']="";
 
 		.userBtn{
 			float: right;
+			margin: 5px;
 		}
 
 		.userNameDisp{

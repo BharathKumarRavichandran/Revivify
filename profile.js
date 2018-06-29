@@ -330,26 +330,45 @@ function createUserBox(cards,username,btnText){
 	var userSpan = document.createElement("span");
 	var btnSpan = document.createElement("span");
 	var button = document.createElement("button");
+	var button2;
+	if(btnText!="View Profile"){
+		button2 = document.createElement("button");
+	}
 
 	var userSpanText = document.createTextNode(username);
 	var buttonText = document.createTextNode(btnText);
+	var button2Text;
+	if(btnText!="View Profile"){
+		button2Text = document.createTextNode("View Profile");
+		button2.appendChild(button2Text);
+	}
 
 	userSpan.appendChild(userSpanText);
 	button.appendChild(buttonText);
 
 	li.appendChild(userSpan);
 	btnSpan.appendChild(button);
+	if(btnText!="View Profile"){
+		btnSpan.appendChild(button2);
+	}	
 	li.appendChild(btnSpan);
 	activityRegion.appendChild(li);
 
 	userSpan.setAttribute("id","username"+cards);
 	button.setAttribute("id","followBtn"+cards);
+	if(btnText!="View Profile"){
+		button2.setAttribute("id","viewProfileBtn"+cards);
+	}
 
 	li.setAttribute("class","userBoxClass liClass container card card-body bg-light");
 	li.setAttribute("style","display:inline-block");
 	userSpan.setAttribute("class","userNameDisp");
 	button.setAttribute("class","userBtn btn btn-brown");
 	button.setAttribute("onclick","followBtnClick(this)");
+	if(btnText!="View Profile"){
+		button2.setAttribute("class","userBtn btn btn-brown");
+		button2.setAttribute("onclick","viewProfileBtnClick(this)");
+	}
 
 }
 
@@ -1061,6 +1080,62 @@ function userFollowingCardCreator(cards,text){
 
 	div.setAttribute("id","userActivity"+cards);
 	div.setAttribute("class","userActivityClass container card bg-light");
+	div.setAttribute("onclick","clickUserCard(this)");
+
+}
+
+function viewProfileBtnClick(y){
+
+	var idAttr = y.getAttribute("id");
+    var res = idAttr.split("viewProfileBtn");
+    var k = parseInt(res[1]);
+    var viewUser = document.getElementById("username"+k).innerHTML;
+
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var data;
+	var url = "setViewUser.php?viewUser="+viewUser;
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText); 
+	    	window.location = "viewProfile.php";
+	    }
+	};
+	xmlhttp.open("GET",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send();
+
+}
+
+function clickUserCard(y){
+
+	var text = y.innerHTML;
+
+	var viewUser = text.split(" ");
+
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var data;
+	var url = "setViewUser.php?viewUser="+viewUser[0];
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText); 
+	    	window.location = "viewProfile.php";
+	    }
+	};
+	xmlhttp.open("GET",url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send();
 
 }
 

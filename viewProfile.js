@@ -14,6 +14,7 @@ var allBookData;//stores all the book data in database
 var searchvalue = document.getElementById("searchValue");
 var select = document.getElementById("selectId");
 var searchSuggestionsRegion = document.getElementById("searchSuggestionsRegion");
+var removeRegion = document.getElementById("removeRegion");
 var activityRegion = document.getElementById("activityRegion");
 
 var shelvesArrayInit = new Array();
@@ -168,39 +169,6 @@ function searchFocusOut(){
 
 function initialise(){
 
-	var xmlhttp;
-	if (window.XMLHttpRequest) {
-	  		xmlhttp = new XMLHttpRequest();
-	} 
-	 else{
-	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = "https://www.googleapis.com/books/v1/volumes?q=harry+potter";
-	var data;
-	xmlhttp.onreadystatechange = function(){
-	    if(this.readyState==4&&this.status==200){ 
-	    	cards=0;	
-	    	data = JSON.parse(this.responseText);
-	    	if(data.totalItems==0){
-	    		noBooksDisplay();
-	    	}	
-	    	else{	
-		    	for(i=0;i<data.items.length;i++){
-		    		title = data.items[i].volumeInfo.title;
-		    		author = data.items[i].volumeInfo.authors;
-		    		imgLink = data.items[i].volumeInfo.imageLinks.thumbnail;
-		    		volumeId = data.items[i].id;
-		    		liked="no";
-		    		createBox(cards,volumeId,title,author,imgLink,liked);
-		    		cards++;
-		    	}
-		    }
-		    shelvesInit();		
-	    }
-	};
-	xmlhttp.open("GET",url,true);
-	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send();
 
 }
 
@@ -234,9 +202,13 @@ function shelvesInit(){
 
 function search(){
 
-	while(activityRegion.firstChild){
-		activityRegion.removeChild(activityRegion.firstChild);
+	while(removeRegion.firstChild){
+		removeRegion.removeChild(removeRegion.firstChild);
 	}
+
+	var div = document.createElement("div");
+	document.getElementById("removeRegion").appendChild(div);
+	div.setAttribute("id","activityRegion");
 
 	var optValue = select.options[select.selectedIndex].text;
 
@@ -398,6 +370,7 @@ function createUserBox(cards,username,btnText){
 	}
 
 }
+
 
 function followBtnClick(y){
 
@@ -835,12 +808,186 @@ function getAllBooksData(){//function which gets data of all the books in databa
 
 }
 
-function viewProfileBtnClick(y){
+function activitySelectorDraw(){
 
-	var idAttr = y.getAttribute("id");
-    var res = idAttr.split("viewProfileBtn");
-    var k = parseInt(res[1]);
-    var viewUser = document.getElementById("username"+k).innerHTML;
+	var select = document.createElement("select");
+	var opt1 = document.createElement("option");
+	var opt2 = document.createElement("option");
+
+	var opt1Text = document.createTextNode("Books");
+	var opt2Text = document.createTextNode("Following");
+
+	opt1.appendChild(opt1Text);
+	opt2.appendChild(opt2Text);
+
+	select.appendChild(opt1);
+	select.appendChild(opt2);
+	activityRegion.appendChild(select);
+
+	select.setAttribute("id","activitySelect");
+	select.setAttribute("onchange","activityDraw()");
+
+	activityDraw();
+
+}
+
+function activityDraw(){	
+
+	while (activityRegion.childNodes.length > 1) {
+    	activityRegion.removeChild(activityRegion.lastChild);
+	}
+
+	var activityOptValue = document.getElementById("activitySelect").options[document.getElementById("activitySelect").selectedIndex].text;
+
+	if(activityOptValue=="Books"){
+
+		var xmlhttp;
+		if (window.XMLHttpRequest){
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data;
+		var purpose = "Books";
+		var params="purpose="+purpose;
+		var url = "getOthersPublicActivity.php";
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+				cards=0;
+				if(this.responseText.trim()!==""){
+					data = JSON.parse(this.responseText);
+				    if(data.length==0){
+				    	noActivityDisplay();
+				    }	
+				    else{
+				    	for(i=data.length-1;i>=0;i--){
+					    	title = data[i].Title;
+					    	author = data[i].Authors;
+					    	imgLink = data[i].ImgLink;
+					    	imgLink = decodeURIComponent(imgLink);
+					    	volumeId = data[i].VolumeId;
+					    	liked = data[i].Liked;
+					    	activity = data[i].Activity;
+
+							activityTextCreator(cards,activity);			    	
+					    	createBox(cards,volumeId,title,author,imgLink,liked);
+					    	
+					    	cards++;
+				    	}
+
+				    	for(var t=1;t<shelvesArrayInit.length;t++){//For appending shelves name inside dropdown-menu
+				    		var shelfName = shelvesArrayInit[t];
+				    		shelfDropDownAppend(shelfName);	
+				    	}	
+				    }   
+			    }  
+			    else{
+			    	privateActivityDisplay();
+			    }
+		    }
+		};
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send(params);
+
+	}
+
+	else if(activityOptValue=="Following"){
+
+		var xmlhttp;
+		if (window.XMLHttpRequest){
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data;
+		var purpose = "Following";
+		var params="purpose="+purpose;
+		var url = "getOthersPublicActivity.php";
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+				cards=0;
+				console.log(this.responseText);
+			    data = (this.responseText).trim();
+			    var dataArray = data.split(",");
+			    if(dataArray.length==0){
+			    	noActivityDisplay();
+			    }	
+			    else{
+			    	for(i=dataArray.length-2;i>=0;i--){
+			    		var text = dataArray[i].trim();
+				    	userFollowingCardCreator(cards,text);
+				    	cards++;
+			    	}
+			    }     
+		    }
+		};
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send(params);
+
+	}
+
+}
+
+function userFollowingCardCreator(cards,text){
+
+	var div = document.createElement("div");
+	var text = document.createTextNode(text);
+
+	div.appendChild(text);
+	activityRegion.appendChild(div);
+
+	div.setAttribute("id","userActivity"+cards);
+	div.setAttribute("class","userActivityClass container card bg-light");
+
+}
+
+function activityTextCreator(k,activity){
+
+	var div = document.createElement("div");
+	var divText = document.createTextNode(activity);
+	div.appendChild(divText);
+	activityRegion.appendChild(div);
+	div.setAttribute("id","activityText"+k);
+	div.setAttribute("class","activityText");
+
+}
+
+function noActivityDisplay(){
+	var div = document.createElement("div");
+	var divText = document.createTextNode("No Recent Activity!");
+	div.appendChild(divText);
+	activityRegion.appendChild(div);
+	div.setAttribute("class","no-books card bg-light");
+}
+
+function privateActivityDisplay(){
+	var div = document.createElement("div");
+	var divText = document.createTextNode("User kept his activity private!");
+	div.appendChild(divText);
+	activityRegion.appendChild(div);
+	div.setAttribute("class","no-books card bg-light");
+}
+
+function followBtnClick(y){
+
+    var click = y.innerHTML;
+
+    if(y.innerHTML=="Follow"){
+    	y.innerHTML = "Following";
+    } 
+    else if(y.innerHTML=="Following"){
+		y.innerHTML = "Follow";
+    }
+    else if(y.innerHTML=="View Profile"){
+    	window.location = "profile.php";
+    }
+
+    var followUsername = document.getElementById("viewUser").innerHTML.trim();
+    var purpose = "followBtnClick";
 
 	var xmlhttp;
 	if (window.XMLHttpRequest){
@@ -849,18 +996,17 @@ function viewProfileBtnClick(y){
 	 else{
 	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var data;
-	var url = "setViewUser.php?viewUser="+viewUser;
+	var params = "followUsername="+followUsername+"&click="+click+"&purpose="+purpose;
+	var url = "followUser.php";
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
-	    	console.log(this.responseText); 
-	    	window.location = "viewProfile.php";
+	    	console.log(this.responseText);
 	    }
 	};
-	xmlhttp.open("GET",url,true);
+	xmlhttp.open("POST",url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send();
+	xmlhttp.send(params);
 
 }
 
-initialise();
+activitySelectorDraw();
