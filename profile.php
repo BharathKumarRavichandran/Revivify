@@ -542,6 +542,8 @@ $_SESSION['message']="";
 		<a id="wantToRead" class="sidenavlinks" onclick="shelfClick(this);">Want To Read</a>
 		<a id="currentlyReading" class="sidenavlinks" onclick="shelfClick(this);">Currently Reading</a>
 		<a id="finishedReading" class="sidenavlinks" onclick="shelfClick(this);">Finished Reading</a>
+		<a id="followingId" class="sidenavlinks" onclick="followDataDisplay(this);">Following</a>
+		<a id="followersId" class="sidenavlinks" onclick="followDataDisplay(this);">Followers</a>
 		<a class="sidenavlinks" onclick="settings();">Settings</a>
 		<a class="sidenavlinks" onclick="logout();">Logout</a>
 		<div class="sidenavlinks labelsOPT">Bookshelves:</div>

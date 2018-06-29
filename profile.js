@@ -135,8 +135,8 @@ function searchSuggestionClick(y){
     var volumeId = document.getElementById("suggVolId"+k).innerHTML;
 
 	while(activityRegion.firstChild){
-			activityRegion.removeChild(activityRegion.firstChild);
-		} 
+		activityRegion.removeChild(activityRegion.firstChild);
+	} 
 
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
@@ -1271,6 +1271,65 @@ function sliderChange(y){
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
 
+}
+
+function followDataDisplay(y){
+
+	var clickText = y.innerHTML.trim();
+
+	while(activityRegion.firstChild){
+		activityRegion.removeChild(activityRegion.firstChild);
+	} 
+
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+		  		xmlhttp = new XMLHttpRequest();
+		} 
+		 else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		var url = "followData.php";
+		var params = "";
+		var userData;
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){
+		    	cards=0;
+		    	userData = JSON.parse(this.responseText);
+		    	if(userData.length==0){
+		    		noUsersDisplay();
+		    	}
+		    	else{
+		    		var currentUser = userData[0].currentUser;
+		    		for(var g=0;g<userData.length;g++){
+		    			if(clickText=="Following"){
+		    				var array = userData[g].Following.split(",");
+		    				for(var d=0;d<array.length-1;d++){
+		    					createUserBox(cards,array[d],"Following");
+		    					cards++;
+		    				}		
+		    			}
+		    			else if(clickText=="Followers"){
+		    				var array = userData[g].Followers.split(",");
+		    				for(var d=0;d<array.length-1;d++){
+		    					var btnText = "Follow";
+		    					var followingArray = userData[g].Following.split(",");
+		    					for(var x=0;x<followingArray.length;x++){
+		    						if(array[d]==followingArray[x]){
+			    						btnText = "Following";
+			    					}
+		    					}
+		    					createUserBox(cards,array[d],btnText);
+		    					cards++;
+		    				}		
+		    			}
+		    		}
+		    	}
+		   	}
+		};
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send(params);
 }
 
 initialise();
