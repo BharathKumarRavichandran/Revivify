@@ -64,6 +64,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		else{
 
+			$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES (?,?,?,?,?,?);");
+			if(!$stmt){
+				echo "Error preparing statement ".htmlspecialchars($conn->error);
+			}
+			$stmt->bind_param("ssssss",$volumeId,$title,$author,$imgLink,$likeStatus,$status);
+			$stmt->execute();
+			$stmt->close();
+
 			$activity = $username." has added ".$title." to his ".$status." collection.";
 			$stmt = $conn->prepare("UPDATE $tablename SET Activity=? WHERE VolumeId = ?;");
 			if(!$stmt){
@@ -72,14 +80,6 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$stmt->bind_param("ss",$activity,$volumeId);
 			$stmt->execute();
 			$stmt->close();	
-
-			$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES (?,?,?,?,?,?);");
-			if(!$stmt){
-				echo "Error preparing statement ".htmlspecialchars($conn->error);
-			}
-			$stmt->bind_param("ssssss",$volumeId,$title,$author,$imgLink,$likeStatus,$status);
-			$stmt->execute();
-			$stmt->close();
 
 		}		
 
@@ -169,7 +169,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		$shelfName = $_POST["shelfName"];
 
-		$stmt = $conn->prepare("ALTER TABLE $tablename ADD $shelfName VARCHAR(500);");
+		$stmt = $conn->prepare("ALTER TABLE $tablename ADD `$shelfName` VARCHAR(500);");
 		if(!$stmt){
 			echo "Error preparing statement ".htmlspecialchars($conn->error);
 		}
