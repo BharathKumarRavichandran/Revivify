@@ -527,6 +527,7 @@ function createBox(k,volumeId,title,author,imgLink,liked){
 	a2.setAttribute("class","dropdown-item");
 	dropDivideHead.setAttribute("class","dropdown-header");
 	ad0.setAttribute("class","dropdown-item");
+	likeDiv.setAttribute("class","likeDivClass");
 
 	if(liked=="yes"){
 		i.setAttribute("class","fa fa-thumbs-up fa-2x liked");
@@ -1011,12 +1012,9 @@ function activityDraw(){
 				    	liked = data[i].Liked;
 				    	activity = data[i].Activity;
 
-				    	var divhref = "localhost/Revivify/profile.php";
-				    	var ahref = "https://www.facebook.com/sharer/sharer.php?u=localhost%2fRevivify%2fprofile.php&amp;src=sdkpreparse";
-
 						activityTextCreator(cards,activity);			    	
 				    	createBox(cards,volumeId,title,author,imgLink,liked);
-				    	shareButtonCreator(cards,divhref,ahref);
+				    	shareButtonCreator(cards);
 				    	
 				    	cards++;
 			    	}
@@ -1150,23 +1148,38 @@ function activityTextCreator(k,activity){
 
 }
 
-function shareButtonCreator(k,divhref,ahref){
+function shareButtonCreator(k){
+
 	var shareDiv = document.createElement("span");
-	var shareA = document.createElement("a");
-	var shareAText = document.createTextNode("Share");
-	shareA.appendChild(shareAText);
-	shareDiv.appendChild(shareA);
+	var a = document.createElement("a");
+	var i =document.createElement("i");
+
+	a.appendChild(i);
+	shareDiv.appendChild(a);
 	document.getElementById("likeDiv"+k).appendChild(shareDiv);
 
-	shareDiv.setAttribute("id","shareButton"+k);
-	shareDiv.setAttribute("class","fb-share-button shareButton");
-	shareDiv.setAttribute("data-href",divhref);
-	shareDiv.setAttribute("data-layout","button");
-	shareDiv.setAttribute("data-size","small");
-	shareDiv.setAttribute("data-mobile-iframe","true");
-	shareA.setAttribute("target","_blank");
-	shareA.setAttribute("href","https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse");
-	shareA.setAttribute("class","fb-xfbml-parse-ignore");
+	a.setAttribute("id","share"+k);
+	shareDiv.setAttribute("class","share");
+	a.setAttribute("class","facebook");
+	i.setAttribute("class","fa fa-facebook");
+	a.setAttribute("onclick","fbShareClick(this);");
+
+}
+
+function fbShareClick(y){
+
+	var idAttr = y.getAttribute("id");
+    var res = idAttr.split("share");
+    var k = parseInt(res[1]);
+    var text = document.getElementById("activityText"+k).innerHTML;
+
+	FB.ui({
+	    method: 'share',
+	    display: 'popup',
+	    href: 'http://127.0.0.1/revivify/register.php',
+	    quote: text,
+  }, function(response){});
+
 }
 
 function noActivityDisplay(){

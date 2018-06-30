@@ -487,6 +487,44 @@ $_SESSION['message']="";
 			margin-bottom: 30px;
 		}
 
+		.likeDivClass{
+			margin-top: 15px;
+			margin-bottom: 10px;
+		}
+
+		.share{
+		  	color: #fff;
+		}
+
+		.share a{
+			color: #fff;
+			margin-right: 25px;
+			text-align: center;
+			float: right;
+			width: 50px;
+		  	height: 50px;
+		  	display: inline-block;
+		  	border-radius: 50%;
+		  	font-size: 24px;
+		  	color: #fff;
+		  	opacity: 0.83;
+			transition: opacity 0.15s linear;
+		}
+
+		.share a:hover{
+			opacity: 1;
+		}
+
+		.share i{
+		  	position: relative;
+		  	top: 40%;
+		  	transform: translateY(-50%);
+		}
+
+		.facebook{
+		 	background: #3b5998;
+		}
+
 		@media screen and (max-width: 600px) {
 			.topnav .search-container {
 		    	float: none;
@@ -509,7 +547,6 @@ $_SESSION['message']="";
 	</style>
 </head>
 <body>
-
 	<div id="fb-root"></div>
 	<script>(function(d, s, id) {
 	  var js, fjs = d.getElementsByTagName(s)[0];
@@ -518,7 +555,6 @@ $_SESSION['message']="";
 	  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0&appId=1812171645472822&autoLogAppEvents=1';
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
-
 	<div id="navbar" class="topnav">
 		<a id="title" class="title" onclick="home()">Revivify</a>
 		<a class="options" href="#home" onclick="home()">Home</a>
@@ -564,7 +600,6 @@ $_SESSION['message']="";
 	</div>
 	<div id="searchSuggestionsRegion" class="search-container"></div>
 	<div id="activityRegion" class="main" style="margin-top: 20vh;">
-		
 	</div>
 
 <script type="text/javascript">
