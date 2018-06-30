@@ -140,15 +140,15 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		else{
 
 				$likeStatus = "no";
+				$status = "yes";
 
-				$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,Status) "."VALUES (?,?,?,?,?,?);");
+				$stmt = $conn->prepare("INSERT INTO $tablename(VolumeId,Title,Author,ImgLink,Liked,`$column`) "."VALUES (?,?,?,?,?,?);");
 				if(!$stmt){
 					echo "Error preparing statement ".htmlspecialchars($conn->error);
 				}
 				$stmt->bind_param("ssssss",$volumeId,$title,$author,$imgLink,$likeStatus,$status);
 				$stmt->execute();
 				$stmt->get_result();
-
 				$stmt->close();
 
 				$activity = $username." has added ".$title." to his ".$column." collection. ";
