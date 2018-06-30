@@ -168,39 +168,13 @@ function searchFocusOut(){
 
 function initialise(){
 
-	var xmlhttp;
-	if (window.XMLHttpRequest) {
-	  		xmlhttp = new XMLHttpRequest();
-	} 
-	 else{
-	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = "https://www.googleapis.com/books/v1/volumes?q=harry+potter";
-	var data;
-	xmlhttp.onreadystatechange = function(){
-	    if(this.readyState==4&&this.status==200){ 
-	    	cards=0;	
-	    	data = JSON.parse(this.responseText);
-	    	if(data.totalItems==0){
-	    		noBooksDisplay();
-	    	}	
-	    	else{	
-		    	for(i=0;i<data.items.length;i++){
-		    		title = data.items[i].volumeInfo.title;
-		    		author = data.items[i].volumeInfo.authors;
-		    		imgLink = data.items[i].volumeInfo.imageLinks.thumbnail;
-		    		volumeId = data.items[i].id;
-		    		liked="no";
-		    		createBox(cards,volumeId,title,author,imgLink,liked);
-		    		cards++;
-		    	}
-		    }
-		    shelvesInit();		
-	    }
-	};
-	xmlhttp.open("GET",url,true);
-	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send();
+	cards=0;
+
+	document.getElementById("searchValue").value = "Harry Potter";
+	document.getElementById("searchButtonId").click();
+
+	document.getElementById("searchValue").value = "";
+	document.getElementById("searchValue").placeholder = "Search";
 
 }
 
@@ -623,7 +597,7 @@ function aClick(y){
 	 else{
 	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var params = "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&status="+bookStatus+"&purpose="+purpose;
+	var params = "volumeId="+volumeId+"&title="+title+"&author="+author+"&imgLink="+imgLink+"&status="+bookStatus+"&volumeId="+volumeId+"&purpose="+purpose;
 	var url = "saveBookData.php";
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
