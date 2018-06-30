@@ -16,6 +16,7 @@ Author, Publisher, ISBN or subject.
 * User can view the profile page and activity of other users. Users can also make their
 activity - public/private. Private activities will not be visible to any other user except that
 individual.
+* Users can share their activity on their Facebook wall.
 * Sign up process with real time indication of usernames availability and a Captcha.
 
 ----
