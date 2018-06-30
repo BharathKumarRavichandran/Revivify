@@ -909,7 +909,6 @@ function activityDraw(){
 		xmlhttp.onreadystatechange = function(){
 		    if(this.readyState==4&&this.status==200){
 				cards=0;
-				console.log(this.responseText);
 			    data = (this.responseText).trim();
 			    var dataArray = data.split(",");
 			    if(dataArray.length==0){
