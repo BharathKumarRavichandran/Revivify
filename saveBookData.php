@@ -117,7 +117,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 					$activity = $username." has added ".$title." to his ".$column." collection.";
 				}
 
-				$stmt = $conn->prepare("UPDATE $tablename SET $column = ? WHERE VolumeId = ?;");
+				$stmt = $conn->prepare("UPDATE $tablename SET `$column` = ? WHERE VolumeId = ?;");
 				if(!$stmt){
 					echo "Error preparing statement ".htmlspecialchars($conn->error);
 				}
@@ -225,7 +225,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 					$stmt->close();	
 				}
 
-				$stmt = $conn->prepare("UPDATE $tablename SET $column = ? WHERE VolumeId = ?;");
+				$stmt = $conn->prepare("UPDATE $tablename SET `$column` = ? WHERE VolumeId = ?;");
 				if(!$stmt){
 					echo "Error preparing statement ".htmlspecialchars($conn->error);
 				}

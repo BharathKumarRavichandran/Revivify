@@ -51,7 +51,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$columnName = $_POST['columnName'];
 		$status = $_POST['status'];
 
-		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE $columnName = ?;");
+		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE `$columnName` = ?;");
 		if(!$stmt){
 			echo "Error preparing statement ".htmlspecialchars($conn->error);
 		}
