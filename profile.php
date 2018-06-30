@@ -573,14 +573,14 @@ $_SESSION['message']="";
 	  	</span>
 	</div>	
 	<div class="sidenav" id="sidenav">
-		<a class="sidenavlinks active" onclick="activityClick();">Activity</a>
+		<a id="activityId" class="sidenavlinks active" onclick="activityClick();">Activity</a>
 		<a id="booksLiked" class="sidenavlinks" onclick="shelfClick(this);">Books Liked</a>
 		<a id="wantToRead" class="sidenavlinks" onclick="shelfClick(this);">Want To Read</a>
 		<a id="currentlyReading" class="sidenavlinks" onclick="shelfClick(this);">Currently Reading</a>
 		<a id="finishedReading" class="sidenavlinks" onclick="shelfClick(this);">Finished Reading</a>
 		<a id="followingId" class="sidenavlinks" onclick="followDataDisplay(this);">Following</a>
 		<a id="followersId" class="sidenavlinks" onclick="followDataDisplay(this);">Followers</a>
-		<a class="sidenavlinks" onclick="settings();">Settings</a>
+		<a id="settingsId" class="sidenavlinks" onclick="settings();">Settings</a>
 		<a class="sidenavlinks" onclick="logout();">Logout</a>
 		<div class="sidenavlinks labelsOPT">Bookshelves:</div>
 		<a class="sidenavlinks" onclick="openNewShelfModal();">Add New Shelf</a>

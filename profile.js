@@ -975,7 +975,16 @@ function activityClick(){
 
 }	
 
-function activityDraw(){	
+function activityDraw(){
+
+	var children = document.getElementById("sidenav").children;
+	for(t=0;t<children.length;t++){
+		if(children[t].classList.contains("active")){
+			children[t].classList.remove("active");
+		}
+	} 
+
+	document.getElementById("activityId").classList.add("active");
 
 	while (activityRegion.childNodes.length > 1) {
     	activityRegion.removeChild(activityRegion.lastChild);
@@ -1192,6 +1201,15 @@ function noActivityDisplay(){
 
 function settings(){
 
+	var children = document.getElementById("sidenav").children;
+	for(t=0;t<children.length;t++){
+		if(children[t].classList.contains("active")){
+			children[t].classList.remove("active");
+		}
+	} 
+
+	document.getElementById("settingsId").classList.add("active");
+
 	while(activityRegion.firstChild){
 		activityRegion.removeChild(activityRegion.firstChild);
 	}
@@ -1287,6 +1305,15 @@ function sliderChange(y){
 }
 
 function followDataDisplay(y){
+
+	var children = document.getElementById("sidenav").children;
+	for(t=0;t<children.length;t++){
+		if(children[t].classList.contains("active")){
+			children[t].classList.remove("active");
+		}
+	} 
+
+	y.classList.add("active");
 
 	var clickText = y.innerHTML.trim();
 
