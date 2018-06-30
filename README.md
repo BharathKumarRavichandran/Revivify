@@ -1,6 +1,6 @@
 # Revivify
 
-Revivify is a "social cataloging" website that allows individuals to freely search the database of books in Google Books using Google Books API. Users can sign up and register books to generate library catalogs and reading lists.
+Revivify is a social cataloging web application that allows individuals to freely search the database of books in Google Books using Google Books API. Users can sign up and register books to generate library catalogs and reading lists.
 This project uses PHP, Javascript, HTML, CSS and AJAX requests.
 
 ## Features 
