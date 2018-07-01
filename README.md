@@ -5,7 +5,7 @@ This project uses PHP, Javascript, HTML, CSS and AJAX requests.
 
 ## Features 
 
-* App with secure login and sign up options. Each user has their own calendar and appointments.
+* App with secure login and sign up options.
 * Users can add a book to their library/bookshelf, mark it as favorite, like the book, mark a book as ‘Want To Read’, ‘Currently Reading’ or ‘Finished Reading’.
 * A user’s profile page have the following - user’s favorite books, books liked, books in
 the user’s bookshelves, books that the user is currently reading and the activity of the
